@@ -8,10 +8,6 @@
 3. Installeer alle dependencies via composer: `composer install`.
 4. Run de lokale ontwikkel server: `symfony serve`.
 
-```sh
-composer install && symfony serve
-```
-
 ## Bijdrage doen
 
 1. Fork het project
