@@ -15,7 +15,24 @@
     background-color: rgba(0,0,0,.03) !important;
 }
 
+.card-header {
+    padding: 8px;
+}
+
 @media (max-width: 576px) {
+    .header h1 {
+        font-size: 3rem;
+    }
+
+    .header .lead {
+        font-size: 16px;
+        font-weight: unset;
+    }
+
+    .nav-item.nav-link {
+        padding: 8px;
+    }
+
     .gridjs-pagination .gridjs-pages {
         float: left;
         font-size: 10px;
@@ -26,8 +43,15 @@
         display: none;
     }
 
-    .header .lead {
-        font-size: 16px;
-        font-weight: unset;
+    .gridjs-footer {
+        padding: 12px;
+    }
+
+    .gridjs-summary {
+        margin-top: 0 !important;
+    }
+
+    .card-header h4 {
+        font-size: 1.3rem;
     }
 }
