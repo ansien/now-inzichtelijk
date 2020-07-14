@@ -1,3 +1,4 @@
+/* region General layout */
 .navbar-brand {
     margin: 0;
     font-size: 30px;
@@ -5,30 +6,24 @@
     text-align: center;
 }
 
-.gridjs-wrapper {
-    border: 1px solid rgba(0,0,0,.125);
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
-    font-size: 14px;
-}
-
-.gridjs-wrapper th.gridjs-th {
-    background-color: rgba(0,0,0,.03) !important;
-}
-
 .card-header {
     padding: 8px;
-}
-
-.total-card .card-body {
-    padding: 12px 24px;
 }
 
 footer li {
     margin-bottom: 4px;
 }
+/* endregion */
 
-.total-card-content {
-    display: none;
+/* region Grid */
+.gridjs-wrapper th.gridjs-th {
+    background-color: rgba(0,0,0,.03) !important;
+}
+
+.gridjs-wrapper {
+    border: 1px solid rgba(0,0,0,.125);
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    font-size: 14px;
 }
 
 .grid-totals .card-body {
@@ -39,7 +34,9 @@ footer li {
 .grid-totals .grid-total-content {
     display: none;
 }
+/* endregion */
 
+/* region Mobile (responsiveness improvements) */
 @media (max-width: 576px) {
     .header h1 {
         font-size: 3rem;
@@ -76,3 +73,4 @@ footer li {
         font-size: 1.3rem;
     }
 }
+/* endregion */
