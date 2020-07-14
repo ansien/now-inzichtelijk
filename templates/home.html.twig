@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <div class="container">
+    <div class="nowi container">
 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mt-4">
-            <h1 class="navbar-brand">Waar is de NOW?</h1>
+        <nav class="nowi-title navbar navbar-expand-lg navbar-light bg-light rounded mt-4">
+            <h1 class="nowi-title__brand navbar-brand">Waar is de NOW?</h1>
         </nav>
 
-        <div class="header px-3 my-4 mx-auto text-center">
-            <h1 class="display-4 mb-3">NOW Regeling Inzichtelijk</h1>
-            <p class="lead mb-0">
+        <div class="nowi-header header px-3 my-4 mx-auto text-center">
+            <h1 class="nowi-header__title display-4 mb-3">NOW Regeling Inzichtelijk</h1>
+            <p class="nowi-header__lead lead mb-0">
                 De tijdelijke Noodmaatregel Overbrugging Werkgelegenheid (NOW) is een subsidie die uit publiek geld wordt betaald.
                 Naar welke bedrijven is deze subsidie toegegaan?
                 Na afloop van de tweede aanvraagperiode en definitieve berekening zal hier het verschil in subsidie getoond worden en zal het dus inzichtelijk worden welke bedrijven potentieel misbruik hebben gemaakt van deze regeling.
@@ -20,9 +20,9 @@
 
         <div class="row mt-4 text-center">
             <div class="col-md-4 col-xs-12">
-                <div class="card mb-3 mb-md-0 shadow-sm">
-                    <div class="card-header">
-                        <h4 class="my-0 font-weight-normal">Totaal toegekend</h4>
+                <div class="nowi-card card mb-3 mb-md-0 shadow-sm">
+                    <div class="nowi-card__header card-header">
+                        <h4 class="nowi-card__header-content my-0 font-weight-normal">Totaal toegekend</h4>
                     </div>
                     <div class="card-body">
                         <h3 class="card-title mb-0">
@@ -32,9 +32,9 @@
                 </div>
             </div>
             <div class="col-md-4 col-xs-12">
-                <div class="card mb-3 mb-md-0 shadow-sm">
-                    <div class="card-header">
-                        <h4 class="my-0 font-weight-normal">Aantal toekenningen</h4>
+                <div class="nowi-card card mb-3 mb-md-0 shadow-sm">
+                    <div class="nowi-card__header card-header">
+                        <h4 class="nowi-card__header-content my-0 font-weight-normal">Aantal toekenningen</h4>
                     </div>
                     <div class="card-body">
                         <h3 class="card-title mb-0">
@@ -44,9 +44,9 @@
                 </div>
             </div>
             <div class="col-md-4 col-xs-12">
-                <div class="card shadow-sm">
-                    <div class="card-header">
-                        <h4 class="my-0 font-weight-normal">Gemiddelde toekenning</h4>
+                <div class="nowi-card card shadow-sm">
+                    <div class="nowi-card__header card-header">
+                        <h4 class="nowi-card__header-content my-0 font-weight-normal">Gemiddelde toekenning</h4>
                     </div>
                     <div class="card-body">
                         <h3 class="card-title mb-0">
@@ -57,16 +57,16 @@
             </div>
         </div>
 
-        <div class="grids-wrapper my-4">
+        <div class="nowi-grids my-4">
             <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a class="nav-item nav-link active" id="now-1-tab" data-toggle="tab" href="#now-1" role="tab" aria-controls="now-1" aria-selected="true">
+                <div class="nowi-nav nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nowi-nav__item nav-item nav-link active" id="now-1-tab" data-toggle="tab" href="#now-1" role="tab" aria-controls="now-1" aria-selected="true">
                         NOW 1.0 <span class="d-none d-lg-inline">Register</span>
                     </a>
-                    <a class="nav-item nav-link disabled" id="now-2-tab" data-toggle="tab" href="#now-2" role="tab" aria-controls="now-2" aria-selected="false">
+                    <a class="nowi-nav__item nav-item nav-link disabled" id="now-2-tab" data-toggle="tab" href="#now-2" role="tab" aria-controls="now-2" aria-selected="false">
                         <s>NOW 2.0 </s><span class="d-none d-lg-inline"><s>Register</s></span> 🔜
                     </a>
-                    <a class="nav-item nav-link disabled" id="now-definitief-tab" data-toggle="tab" href="#now-definitief" role="tab" aria-controls="now-definitief" aria-selected="false">
+                    <a class="nowi-nav__item nav-item nav-link disabled" id="now-definitief-tab" data-toggle="tab" href="#now-definitief" role="tab" aria-controls="now-definitief" aria-selected="false">
                         <s>Definitief </s><span class="d-none d-lg-inline"><s>Register</s></span> 🔜
                     </a>
                 </div>
@@ -83,26 +83,26 @@
                     </div>
                     <div id="first-batch-grid"></div>
 
-                    <div class="grid-totals row mt-2">
+                    <div class="nowi-grid-totals row mt-2">
                         <div class="col-12 col-md-6 mb-2 mb-md-0">
-                            <div class="card">
-                                <div class="card-body">
-                                    <span class="grid-total-content">
+                            <div class="nowi-grid-total card">
+                                <div class="nowi-grid-total__body card-body">
+                                    <span class="nowi-grid-total__content">
                                         <strong>Totaal: </strong><span class="first-batch-grid-total"></span>
                                     </span>
-                                    <span class="grid-total-loader">
+                                    <span class="nowi-grid-total__loader">
                                         <i class="fas fa-spinner fa-pulse"></i>
                                     </span>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
-                            <div class="card">
-                                <div class="card-body">
-                                    <span class="grid-total-content">
+                            <div class="nowi-grid-total card">
+                                <div class="nowi-grid-total__body card-body">
+                                    <span class="nowi-grid-total__content">
                                         <strong>Gemiddelde: </strong><span class="first-batch-grid-average"></span>
                                     </span>
-                                    <span class="grid-total-loader">
+                                    <span class="nowi-grid-total__loader">
                                         <i class="fas fa-spinner fa-pulse"></i>
                                     </span>
                                 </div>
@@ -117,8 +117,8 @@
 
         <section class="accordion-section clearfix mb-4 mt-4" aria-label="Question Accordions">
             <div id="accordion">
-                <div class="card mb-3">
-                    <div class="card-header" id="faq-1-heading">
+                <div class="nowi-card card mb-3">
+                    <div class="nowi-card__header card-header" id="faq-1-heading">
                         <h5 class="mb-0">
                             <button class="btn btn-link" data-toggle="collapse" data-target="#faq-1" aria-expanded="true" aria-controls="faq-1">
                                 Waarom deze website?
@@ -137,8 +137,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card mb-3">
-                    <div class="card-header" id="faq-2-heading">
+                <div class="nowi-card card mb-3">
+                    <div class="nowi-card__header card-header" id="faq-2-heading">
                         <h5 class="mb-0">
                             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#faq-2" aria-expanded="false" aria-controls="faq-2">
                                 Welke gegevens staan in het register NOW?
@@ -167,8 +167,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card">
-                    <div class="card-header" id="faq-3-heading">
+                <div class="nowi-card card">
+                    <div class="nowi-card__header card-header" id="faq-3-heading">
                         <h5 class="mb-0">
                             <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#faq-3" aria-expanded="false" aria-controls="faq-3">
                                 Is dit een officiële (overheids) website?
@@ -186,22 +186,16 @@
 
         <hr>
 
-        <footer class="pb-4">
+        <footer class="nowi-footer pb-4">
             <a href="https://www.buymeacoffee.com/ansien" target="_blank" rel="noreferrer" class="btn btn-success float-right d-none d-lg-block">Doneer een biertje 🍺</a>
             <a href="https://www.buymeacoffee.com/ansien" target="_blank" rel="noreferrer" class="btn btn-success btn-sm float-right d-lg-none">Doneer een biertje 🍺</a>
             <h5 class="mb-3">Links</h5>
-            <ul class="list-unstyled text-small">
-                <li><a class="text-muted" href="https://twitter.com/share?url=https://now-inzichtelijk.nl" target="_blank" rel="noreferrer">Deel op Twitter 🔗</a></li>
-                <li><a class="text-muted" href="{{ asset('file/first-batch.pdf') }}" target="_blank">Bron (PDF) 📄</a></li>
-                <li><a class="text-muted" href="{{ asset('file/first-batch.csv') }}" target="_blank">Bron (CSV) 📝</a></li>
-                <li><a class="text-muted" href="https://github.com/now-inzichtelijk-nl/now-inzichtelijk-nl-website" target="_blank" rel="noreferrer">Github ‍🔧</a></li>
+            <ul class="nowi-footer-list list-unstyled text-small">
+                <li class="nowi-footer-list__link"><a class="text-muted" href="https://twitter.com/share?url=https://now-inzichtelijk.nl" target="_blank" rel="noreferrer">Deel op Twitter 🔗</a></li>
+                <li class="nowi-footer-list__link"><a class="text-muted" href="{{ asset('file/first-batch.pdf') }}" target="_blank">Bron (PDF) 📄</a></li>
+                <li class="nowi-footer-list__link"><a class="text-muted" href="{{ asset('file/first-batch.csv') }}" target="_blank">Bron (CSV) 📝</a></li>
+                <li class="nowi-footer-list__link"><a class="text-muted" href="https://github.com/now-inzichtelijk-nl/now-inzichtelijk-nl-website" target="_blank" rel="noreferrer">Github ‍🔧</a></li>
             </ul>
         </footer>
     </div>
 {% endblock %}
-
-{#{% block javascripts %}#}
-{#    <script src="{{ asset('js/util.js') }}"></script>#}
-{#    <script src="{{ asset('js/index.js') }}"></script>#}
-{#    <script src="{{ asset('js/grid/first-batch-grid.js') }}"></script>#}
-{#{% endblock %}#}

@@ -1,81 +1,85 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~gridjs/dist/theme/mermaid.css';
 
-/* region General layout */
-.navbar-brand {
-    margin: 0;
-    font-size: 30px;
-    width: 100%;
-    text-align: center;
-}
-
-.card-header {
-    padding: 8px;
-}
-
-footer li {
-    margin-bottom: 4px;
-}
-/* endregion */
-
-/* region Grid */
-.gridjs-wrapper th.gridjs-th {
-    background-color: rgba(0,0,0,.03) !important;
-}
-
-.gridjs-wrapper {
-    border: 1px solid rgba(0,0,0,.125);
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
-    font-size: 14px;
-}
-
-.grid-totals {
-    .card-body {
+.nowi {
+    .nowi-card .nowi-card__header {
         padding: 8px;
+    }
+
+    .nowi-title .nowi-title__brand {
+        margin: 0;
+        font-size: 30px;
+        width: 100%;
         text-align: center;
     }
 
-    .grid-total-content {
-        display: none;
+    .nowi-footer .nowi-footer-list .nowi-footer-list__link {
+        margin-bottom: 4px;
+    }
+
+    .nowi-grid-totals .nowi-grid-total {
+        .nowi-grid-total__body {
+            padding: 8px;
+            text-align: center;
+
+            .nowi-grid-total__content {
+                display: none;
+            }
+        }
+    }
+
+    @media (max-width: 576px) {
+        .nowi-header {
+            .nowi-header__title {
+                font-size: 3rem;
+            }
+
+            .nowi-header__lead {
+                font-size: 16px;
+                font-weight: unset;
+            }
+        }
+
+        .nowi-nav .nowi-nav__item {
+            padding: 8px;
+        }
+
+        .nowi-card .nowi-card__header .nowi-card__header-content {
+            font-size: 1.3rem;
+        }
     }
 }
-/* endregion */
 
-/* region Mobile (responsiveness improvements) */
-@media (max-width: 576px) {
-    .header h1 {
-        font-size: 3rem;
+.gridjs {
+    .gridjs-wrapper {
+        border: 1px solid rgba(0,0,0,.125);
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+        font-size: 14px;
+
+        th.gridjs-th {
+            background-color: rgba(0,0,0,.03) !important;
+        }
     }
 
-    .header .lead {
-        font-size: 16px;
-        font-weight: unset;
-    }
+    @media (max-width: 576px) {
+        .gridjs-footer {
+            padding: 12px;
 
-    .nav-item.nav-link {
-        padding: 8px;
-    }
+            .gridjs-pagination {
+                .gridjs-summary {
+                    margin-top: 0 !important;
+                }
 
-    .gridjs-pagination .gridjs-pages {
-        float: left;
-        font-size: 10px;
-        margin-top: 10px;
-    }
+                .gridjs-pages {
+                    float: left;
+                    font-size: 10px;
+                    margin-top: 10px;
 
-    .gridjs-pages .gridjs-spread {
-        display: none;
-    }
-
-    .gridjs-footer {
-        padding: 12px;
-    }
-
-    .gridjs-summary {
-        margin-top: 0 !important;
-    }
-
-    .card-header h4 {
-        font-size: 1.3rem;
+                    .gridjs-spread {
+                        display: none;
+                    }
+                }
+            }
+        }
     }
 }
-/* endregion */

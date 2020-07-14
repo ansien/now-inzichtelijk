@@ -12,11 +12,11 @@ export const debounce = (func, delay) => {
 
 export const toggleGridTotals = (show) => {
     if (show) {
-        $('.grid-total-loader').hide();
-        $('.grid-total-content').show();
+        $('.nowi-grid-total__loader').hide();
+        $('.nowi-grid-total__content').show();
     } else {
-        $('.grid-total-content').hide();
-        $('.grid-total-loader').show();
+        $('.nowi-grid-total__content').hide();
+        $('.nowi-grid-total__loader').show();
     }
 }
 

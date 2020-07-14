@@ -17,12 +17,9 @@ const checkGrids = () => {
     }
 }
 
-$('.grids-wrapper a[data-toggle="tab"]').on('shown.bs.tab', function () {
+$('.nowi-grids .nowi-nav .nowi-nav__item[data-toggle="tab"]').on('shown.bs.tab', () => {
     checkGrids();
 })
 
-$(function() {
-    checkGrids();
-});
-
+$(() => checkGrids());
 dom.watch();
