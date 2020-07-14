@@ -1,0 +1,33 @@
+.navbar-brand {
+    margin: 0;
+    font-size: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+.gridjs-wrapper {
+    border: 1px solid rgba(0,0,0,.125);
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+    font-size: 14px;
+}
+
+.gridjs-wrapper th.gridjs-th {
+    background-color: rgba(0,0,0,.03) !important;
+}
+
+@media (max-width: 576px) {
+    .gridjs-pagination .gridjs-pages {
+        float: left;
+        font-size: 10px;
+        margin-top: 10px;
+    }
+
+    .gridjs-pages .gridjs-spread {
+        display: none;
+    }
+
+    .header .lead {
+        font-size: 16px;
+        font-weight: unset;
+    }
+}

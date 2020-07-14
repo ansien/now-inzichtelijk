@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mt-4">
+            <h1 class="navbar-brand">Waar is de NOW?</h1>
+        </nav>
+
+        <div class="header px-3 my-4 mx-auto text-center">
+            <h1 class="display-4 mb-3">NOW Regeling Inzichtelijk</h1>
+            <p class="lead mb-0">
+                De tijdelijke Noodmaatregel Overbrugging Werkgelegenheid (NOW) is een subsidie die uit publiek geld wordt betaald.
+                Naar welke bedrijven is deze subsidie toegegaan?
+                Na afloop van de tweede aanvraagperiode en definitieve berekening zal hier het verschil in subsidie getoond worden en zal het dus inzichtelijk worden welke bedrijven potentieel misbruik hebben gemaakt van deze regeling.
+            </p>
+        </div>
+
+        <hr>
+
+        <div class="row my-4 text-center">
+            <div class="col-md-4 col-xs-12">
+                <div class="card mb-3 mb-md-0 shadow-sm">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Totaal toegekend</h4>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title mb-0">
+                            € 7.776.975.944
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="card mb-3 mb-md-0 shadow-sm">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Aantal toekenningen</h4>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title mb-0">
+                            138.966
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h4 class="my-0 font-weight-normal">Gemiddelde toekenning</h4>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title mb-0">
+                            € 55.963
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grids-wrapper mb-3">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a class="nav-item nav-link active" id="now-1-tab" data-toggle="tab" href="#now-1" role="tab" aria-controls="now-1" aria-selected="true">
+                        NOW 1.0 <span class="d-none d-lg-inline">Lijst</span>
+                    </a>
+                    <a class="nav-item nav-link disabled" id="now-2-tab" data-toggle="tab" href="#now-2" role="tab" aria-controls="now-2" aria-selected="false">
+                        <s>NOW 2.0 <span class="d-none d-lg-inline">Lijst</span></s> 🔜
+                    </a>
+                    <a class="nav-item nav-link disabled" id="now-definitief-tab" data-toggle="tab" href="#now-definitief" role="tab" aria-controls="now-definitief" aria-selected="false">
+                        <s><span class="d-lg-none">Definitief</span><span class="d-none d-lg-inline">Definitieve Lijst</span></s> 🔜
+                    </a>
+                </div>
+            </nav>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="now-1" role="tabpanel" aria-labelledby="now-1-tab">
+                    <div class="search-inputs row mt-4">
+                        <div class="col-md-6 col-xs-12">
+                            <input type="search" placeholder="💼 Zoek op bedrijfsnaam" aria-label="💼 Zoek op bedrijfsnaam" class="form-control search-company mb-3">
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <input type="search" placeholder="🏙️ Zoek op vestigingsplaats" aria-label="🏙️ Zoek op vestigingsplaats" class="form-control search-place mb-3">
+                        </div>
+                    </div>
+                    <div id="first-batch-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <section class="accordion-section clearfix mb-4 mt-4" aria-label="Question Accordions">
+            <div id="accordion">
+                <div class="card mb-3">
+                    <div class="card-header" id="faq-1-heading">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#faq-1" aria-expanded="true" aria-controls="faq-1">
+                                Waarom deze website?
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="faq-1" class="collapse show" aria-labelledby="faq-1-heading" data-parent="#accordion">
+                        <div class="card-body">
+                            Op verzoek van het ministerie van Sociale Zaken en Werkgelegenheid (SZW) publiceert UWV een register
+                            NOW. Hierin staan gegevens van bedrijven die in de eerste aanvraagperiode NOW een voorschot op de
+                            tegemoetkoming hebben ontvangen.
+                            <br><br>
+                            Dit is geen officiele website maar een hobby project om de data van het UVW beter inzichtelijk te maken.
+                            Na afloop van de tweede aanvraagperiode en definitieve berekening zal hier het verschil in subsidie getoond worden en wordt het dus inzichtelijk welke bedrijven potentieel misbruik hebben gemaakt van deze regeling.
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header" id="faq-2-heading">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#faq-2" aria-expanded="false" aria-controls="faq-2">
+                                Welke gegevens staan in het register NOW?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="faq-2" class="collapse" aria-labelledby="faq-2-heading" data-parent="#accordion">
+                        <div class="card-body">
+                            Van de bedrijven die in de eerste aanvraagperiode NOW hebben ontvangen, staan op verzoek van het ministerie van
+                            SZW in het register de volgende gegevens:
+
+                            <br><br>
+                            <ul>
+                                <li>De bedrijfsnaam.</li>
+                                <li>De vestigingsplaats</li>
+                                <li>Het verstrekte voorschotbedrag</li>
+                            </ul>
+                            Het register is een momentopname. Het is mogelijk dat werkgevers de gedane NOW-aanvraag alsnog willen
+                            intrekken. Na terugbetaling van het volledige voorschot zal het register, bij een volgende periodieke update,
+                            worden aangepast.
+                            <br><br>
+                            Omdat op dit moment alleen de voorschotbedragen in het register staan, kunnen hier dus nog geen rechten
+                            aan ontleend worden. Het register zal op een later tijdstip aangevuld worden met de definitieve bedragen. De
+                            definitieve bedragen kunnen afwijkend zijn van voorschotbedragen. Na afloop van de tweede aanvraagperiode
+                            NOW zal UWV eenzelfde register publiceren.
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header" id="faq-3-heading">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#faq-3" aria-expanded="false" aria-controls="faq-3">
+                                Is dit een officiële (overheids) website?
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="faq-3" class="collapse" aria-labelledby="faq-3-heading" data-parent="#accordion">
+                        <div class="card-body">
+                            Nee, dit is een hobby project gebaseerd op de <a href="https://www.uwv.nl/overuwv/pers/persberichten/2020/register-met-informatie-over-ontvangers-now-1-0-online.aspx" target="_blank" rel="noreferrer">data vrijgegeven door het UVW</a>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <footer class="pb-4">
+            <a href="https://www.buymeacoffee.com/ansien" target="_blank" rel="noreferrer" class="btn btn-success float-right d-none d-lg-block">Doneer een biertje 🍺</a>
+            <a href="https://www.buymeacoffee.com/ansien" target="_blank" rel="noreferrer" class="btn btn-success btn-sm float-right d-lg-none">Doneer een biertje 🍺</a>
+            <h5>Links</h5>
+            <ul class="list-unstyled text-small">
+                <li><a class="text-muted" href="https://twitter.com/share?url=https://now-inzichtelijk.nl" target="_blank" rel="noreferrer">Deel op Twitter 🔗</a></li>
+                <li><a class="text-muted" href="{{ asset('file/first-batch.pdf') }}" target="_blank" rel="noreferrer">Bron (PDF) 📄</a></li>
+                <li><a class="text-muted" href="{{ asset('file/first-batch.csv') }}" target="_blank" rel="noreferrer">Bron (CSV) 📝</a></li>
+            </ul>
+        </footer>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/util.js') }}"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
+    <script src="{{ asset('js/grid/first-batch-grid.js') }}"></script>
+{% endblock %}
