@@ -1,3 +1,6 @@
+@import '~bootstrap/scss/bootstrap';
+@import '~gridjs/dist/theme/mermaid.css';
+
 /* region General layout */
 .navbar-brand {
     margin: 0;
@@ -26,13 +29,15 @@ footer li {
     font-size: 14px;
 }
 
-.grid-totals .card-body {
-    padding: 8px;
-    text-align: center;
-}
+.grid-totals {
+    .card-body {
+        padding: 8px;
+        text-align: center;
+    }
 
-.grid-totals .grid-total-content {
-    display: none;
+    .grid-total-content {
+        display: none;
+    }
 }
 /* endregion */
 

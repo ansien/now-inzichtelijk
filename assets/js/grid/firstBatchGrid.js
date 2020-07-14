@@ -1,4 +1,19 @@
-var firstBatchGrid = new gridjs.Grid({
+import $ from 'jquery';
+import { Grid } from 'gridjs';
+import { debounce, moneyFormatter, toggleGridTotals } from '../utils';
+
+const FIRST_BATCH_API_URL = '/api/v1/first-batch';
+
+const handleApiData = (data) => {
+    $('.first-batch-grid-total').text(moneyFormatter.format(data.data['totalAmount']));
+    $('.first-batch-grid-average').text(moneyFormatter.format(data.data['totalAmount'] / data.data['totalResults']));
+
+    toggleGridTotals(true);
+
+    return data.data['result'].map((e) => [e['companyName'], e['placeName'], e['amount']]);
+}
+
+export const firstBatchGrid = new Grid({
     columns: [
         'BEDRIJFSNAAM',
         'VESTIGINGSPLAATS',
@@ -10,9 +25,7 @@ var firstBatchGrid = new gridjs.Grid({
     pagination: {
         limit: 15,
         server: {
-            url: (prev, page) => {
-                return `${prev}${prev === FIRST_BATCH_API_URL ? '?' : '&'}page=${page + 1}`;
-            }
+            url: (prev, page) => `${prev}${prev === FIRST_BATCH_API_URL ? '?' : '&'}page=${page + 1}`
         }
     },
     sort: {
@@ -38,8 +51,8 @@ var firstBatchGrid = new gridjs.Grid({
     },
     server: {
         url: FIRST_BATCH_API_URL,
-        then: handleGridData,
-        total: data => data.data['totalResults']
+        then: handleApiData,
+        total: (data) => data.data['totalResults']
     },
     language: {
         'search': {
@@ -51,7 +64,7 @@ var firstBatchGrid = new gridjs.Grid({
             'showing': ' ',
             'of': 'van de',
             'to': 'tot',
-            'results': () => 'toekenningen'
+            'results': 'toekenningen'
         },
         loading: 'Laden...',
         noRecordsFound: 'Geen toekenningen gevonden',
@@ -59,22 +72,10 @@ var firstBatchGrid = new gridjs.Grid({
     }
 });
 
-firstBatchGrid.on('beforeLoad', () => {
-    toggleGridTotals(false);
-});
-
-function handleGridData(data) {
-    $('.first-batch-grid-total').text(moneyFormatter.format(data.data['totalAmount']));
-    $('.first-batch-grid-average').text(moneyFormatter.format(data.data['totalAmount'] / data.data['totalResults']));
-    toggleGridTotals(true);
-
-    return data.data['result'].map(l => [l['companyName'], l['placeName'], l['amount']])
-}
-
-$(document).on('input', '#now-1 .search-company, #now-1 .search-place', debounce(function() {
-    var searchStrings = [];
-    var searchCompany = $('#now-1 .search-company').val();
-    var searchPlace = $('#now-1 .search-place').val();
+$(document).on('input', '.first-batch-tab .search-company, .first-batch-tab .search-place', debounce(() => {
+    let searchStrings = [];
+    const searchCompany = $('.first-batch-tab .search-company').val();
+    const searchPlace = $('.first-batch-tab .search-place').val();
 
     if (!!searchCompany.trim()) searchStrings.push(`companyName:${searchCompany}`);
     if (!!searchPlace.trim()) searchStrings.push(`placeName:${searchPlace}`);
@@ -83,19 +84,21 @@ $(document).on('input', '#now-1 .search-company, #now-1 .search-place', debounce
         firstBatchGrid.updateConfig({
             server: {
                 url: `${FIRST_BATCH_API_URL}?search=${searchStrings.join(',')}`,
-                then: handleGridData,
-                total: data => data.data['totalResults']
+                then: handleApiData,
+                total: (data) => data.data['totalResults']
             }
         });
     } else {
         firstBatchGrid.updateConfig({
             server: {
                 url: FIRST_BATCH_API_URL,
-                then: handleGridData,
-                total: data => data.data['totalResults']
+                then: handleApiData,
+                total: (data) => data.data['totalResults']
             }
         });
     }
+
+    toggleGridTotals(false);
 
     firstBatchGrid.forceRender();
 }, 250));

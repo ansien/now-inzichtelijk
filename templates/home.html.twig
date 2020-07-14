@@ -1,9 +1,5 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-{% endblock %}
-
 {% block body %}
     <div class="container">
 
@@ -76,7 +72,7 @@
                 </div>
             </nav>
             <div class="tab-content">
-                <div class="tab-pane fade show active" id="now-1" role="tabpanel" aria-labelledby="now-1-tab">
+                <div class="tab-pane fade show first-batch-tab active" id="now-1" role="tabpanel" aria-labelledby="now-1-tab">
                     <div class="search-inputs row mt-4">
                         <div class="col-md-6 col-xs-12">
                             <input type="search" placeholder="💼 Zoek op bedrijfsnaam" aria-label="💼 Zoek op bedrijfsnaam" class="form-control search-company mb-3">
@@ -204,8 +200,8 @@
     </div>
 {% endblock %}
 
-{% block javascripts %}
-    <script src="{{ asset('js/util.js') }}"></script>
-    <script src="{{ asset('js/index.js') }}"></script>
-    <script src="{{ asset('js/grid/first-batch-grid.js') }}"></script>
-{% endblock %}
+{#{% block javascripts %}#}
+{#    <script src="{{ asset('js/util.js') }}"></script>#}
+{#    <script src="{{ asset('js/index.js') }}"></script>#}
+{#    <script src="{{ asset('js/grid/first-batch-grid.js') }}"></script>#}
+{#{% endblock %}#}

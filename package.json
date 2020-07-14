@@ -1,0 +1,26 @@
+{
+    "license": "UNLICENSED",
+    "private": false,
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^1.2.29",
+        "@fortawesome/free-solid-svg-icons": "^5.13.1",
+        "bootstrap": "^4.5.0",
+        "gridjs": "^1.11.0",
+        "jquery": "^3.5.1",
+        "popper.js": "^1.16.1"
+    },
+    "devDependencies": {
+        "@symfony/webpack-encore": "^0.30.0",
+        "core-js": "^3.0.0",
+        "node-sass": "^4.14.1",
+        "regenerator-runtime": "^0.13.2",
+        "sass-loader": "8.0.0",
+        "webpack-notifier": "^1.6.0"
+    }
+}
