@@ -21,6 +21,7 @@ Encore
         config.corejs = 3;
     })
     .enableSassLoader()
+    .enablePostCssLoader()
     .enableIntegrityHashes(Encore.isProduction())
 ;
 
