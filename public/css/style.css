@@ -19,8 +19,25 @@
     padding: 8px;
 }
 
+.total-card .card-body {
+    padding: 12px 24px;
+}
+
 footer li {
     margin-bottom: 4px;
+}
+
+.total-card-content {
+    display: none;
+}
+
+.grid-totals .card-body {
+    padding: 8px;
+    text-align: center;
+}
+
+.grid-totals .grid-total-content {
+    display: none;
 }
 
 @media (max-width: 576px) {

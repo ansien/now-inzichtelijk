@@ -15,6 +15,16 @@ function checkGrids() {
     }
 }
 
+function toggleGridTotals(show) {
+    if (show) {
+        $('.grid-total-loader').hide();
+        $('.grid-total-content').show();
+    } else {
+        $('.grid-total-content').hide();
+        $('.grid-total-loader').show();
+    }
+}
+
 $(function() {
     checkGrids();
 });

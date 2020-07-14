@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Manager;
 
 use App\Repository\FirstBatchEntryRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
 use JsonException;
@@ -34,6 +36,8 @@ class FirstBatchEntryApiManager
      */
     public function getFirstBatchEntries(int $page, ?string $orderString, ?string $searchString): array
     {
+        $page = max($page, 1);
+
         $cacheKey = base64_encode(self::FIRST_BATCH_CACHE_KEY . $page . $orderString . $searchString);
         $cacheClient = $this->cacheManager->getClient();
 
@@ -76,6 +80,10 @@ class FirstBatchEntryApiManager
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
+        $totalAmountQb = $this->firstBatchEntryRepository->createQueryBuilder('rl')
+            ->select('SUM(rl.amount)')
+            ->leftJoin('rl.place', 'p');
+
         if ($searchString) {
             try {
                 $searchData = $this->parseQueryString($searchString);
@@ -86,9 +94,11 @@ class FirstBatchEntryApiManager
             if (!empty($searchData)) {
                 if (array_key_exists('companyName', $searchData)) {
                     $qb->andWhere('rl.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
+                    $totalAmountQb->andWhere('rl.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
                 }
                 if (array_key_exists('placeName', $searchData)) {
                     $qb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
+                    $totalAmountQb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
                 }
             }
         }
@@ -103,12 +113,15 @@ class FirstBatchEntryApiManager
             if (!empty($orderData)) {
                 if (array_key_exists('companyName', $orderData)) {
                     $qb->addOrderBy('rl.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('rl.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
                 }
                 if (array_key_exists('placeName', $orderData)) {
                     $qb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
                 }
                 if (array_key_exists('amount', $orderData)) {
                     $qb->addOrderBy('rl.amount', strtoupper($orderData['amount']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('rl.amount', strtoupper($orderData['amount']) === 'ASC' ? 'ASC' : 'DESC');
                 }
             }
         }
@@ -125,9 +138,17 @@ class FirstBatchEntryApiManager
             ];
         }
 
+        try {
+            $totalAmount = (int) $totalAmountQb->getQuery()->getSingleScalarResult();
+        } catch (NoResultException $e) {
+        } catch (NonUniqueResultException $e) {
+            $totalAmount = 0;
+        }
+
         return [
             'result' => $result,
-            'total' => $paginator->count(),
+            'totalAmount' => $totalAmount,
+            'totalResults' => $paginator->count(),
             'page' => $page,
         ];
     }
