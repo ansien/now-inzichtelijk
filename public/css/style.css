@@ -19,6 +19,10 @@
     padding: 8px;
 }
 
+footer li {
+    margin-bottom: 4px;
+}
+
 @media (max-width: 576px) {
     .header h1 {
         font-size: 3rem;
