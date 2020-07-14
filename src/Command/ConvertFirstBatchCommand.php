@@ -94,7 +94,7 @@ class ConvertFirstBatchCommand extends Command
 
                 if (count($tempArr) >= 3) {
                     array_unshift($tempArr, $id); // Prepend ID
-                    $tempArr[] = $pageNumber; // Append page numbers
+                    $tempArr[] = $pageNumber; // Append page number
                     $dataArr[] = $tempArr; // Add to total
                     $tempArr = []; // Clear temp array
                     ++$id;
