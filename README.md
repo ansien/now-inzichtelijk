@@ -1,6 +1,13 @@
 # NOW Regeling Inzichtelijk Website
 > Code achter de website: https://now-inzichtelijk.nl.
 
+## Ontwikkelomgeving vereisten
+- PHP 7.4 (incl. Composer)
+- MySQL
+- Node.js
+- Yarn / npm
+- (Optioneel) Redis
+
 ## Installatie
 
 1. Maak een `.env.local` bestand gebaseerd op het `.env` bestand met jouw MySQL database gegevens.
