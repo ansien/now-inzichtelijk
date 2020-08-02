@@ -100,7 +100,7 @@ class ConvertFirstBatchCommand extends Command
         ])]);
 
         file_put_contents(
-            './public/file/batch-one.csv',
+            './public/file/first-batch.csv',
             $serializer->encode($dataArr, 'csv')
         );
 
