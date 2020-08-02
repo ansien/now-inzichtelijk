@@ -9,7 +9,6 @@ use Smalot\PdfParser\Parser;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Serializer;
@@ -46,16 +45,12 @@ class ConvertFirstBatchCommand extends Command
 
         $dataArr = [['Id', 'Bedrijfsnaam', 'Vestigingsplaats', 'Bedrag', 'Pagina']];
         $ignoredWords = ['BEDRIJFSNAAM', 'VESTIGINGSPLAATS', 'UITBETAALD', 'VOORSCHOTBEDRAG'];
+        $doubleLinePlaces = ['ALBRANDSWAARD', 'SMALLINGERLND', 'WESTERKWARTIER', 'STUKENBROCK', 'PD'];
 
-        $pageNumber = 0;
         $id = 0;
 
-        foreach ($pages as $page) {
-            ++$pageNumber;
-
-            if ($pageNumber <= 2 || $pageNumber >= 2047) {
-                continue;
-            }
+        for ($pageNumber = 2; $pageNumber < 2046; ++$pageNumber) {
+            $page = $pages[$pageNumber];
 
             if (count($page->getTextArray()) <= 0) {
                 $io->writeln("Failed at page: $pageNumber");
@@ -73,20 +68,16 @@ class ConvertFirstBatchCommand extends Command
 
                 $tempArr[] = $t;
 
-                // "Manual" fix for data on multiple lines
-                if (count($tempArr) >= 3 && !preg_match('/^d+$/', $t)) {
-                    $implodedTempArr = implode(';', $tempArr);
-                    $question = new ChoiceQuestion("$implodedTempArr - Merge companyName or placeName?", ['companyName', 'placeName']);
-                    $response = $helper->ask($input, $output, $question);
-
+                // Fix for text on multiple lines
+                if (is_numeric(str_replace(['.', ','], '', $t)) === false && count($tempArr) >= 3) {
                     $newArr = [];
 
-                    if ($response === 'companyName') {
-                        $newArr[0] = $tempArr[0] . $tempArr[1];
-                        $newArr[1] = $tempArr[2];
-                    } else {
+                    if (in_array($t, $doubleLinePlaces, true) === true) {
                         $newArr[0] = $tempArr[0];
                         $newArr[1] = $tempArr[1] . $tempArr[2];
+                    } else {
+                        $newArr[0] = $tempArr[0] . $tempArr[1];
+                        $newArr[1] = $tempArr[2];
                     }
 
                     $tempArr = $newArr;

@@ -56,11 +56,11 @@ class ImportFirstBatchCommand extends Command
         foreach ($csvContent as $csvLine) {
             ++$i;
 
-            if ($i <= 1) {
+            if ($i <= 1) { // Skip header
                 continue;
             }
 
-            $amount = str_replace(['.', ','], '', $csvLine[3]);
+            $amount = $csvLine[3];
             $place = $this->findOrCreatePlace($csvLine[2]);
 
             $registryLine = new FirstBatchEntry($csvLine[1], $place, (int) $amount);
