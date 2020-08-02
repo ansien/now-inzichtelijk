@@ -30,7 +30,6 @@ class ConvertFirstBatchCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
 
         $parser = new Parser();
 
@@ -49,14 +48,14 @@ class ConvertFirstBatchCommand extends Command
 
         $id = 0;
 
-        for ($pageNumber = 2; $pageNumber < 2046; ++$pageNumber) {
-            $page = $pages[$pageNumber];
+        for ($page = 2; $page < 2046; ++$page) {
+            $pageData = $pages[$page];
 
-            if (count($page->getTextArray()) <= 0) {
-                $io->writeln("Failed at page: $pageNumber");
+            if (count($pageData->getTextArray()) <= 0) {
+                $io->writeln("Failed at page: $page");
             }
 
-            $textArr = $page->getTextArray();
+            $textArr = $pageData->getTextArray();
             array_pop($textArr); // Remove page number
 
             $tempArr = [];
@@ -85,7 +84,7 @@ class ConvertFirstBatchCommand extends Command
 
                 if (count($tempArr) >= 3) {
                     array_unshift($tempArr, $id); // Prepend ID
-                    $tempArr[] = $pageNumber; // Append page number
+                    $tempArr[] = $page + 1; // Append page number
                     $tempArr[3] = str_replace(['.', ','], '', $tempArr[3]); // Clean amount
                     $dataArr[] = $tempArr; // Add to total
                     $tempArr = []; // Clear temp array
