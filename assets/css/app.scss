@@ -48,6 +48,19 @@
             font-size: 1.3rem;
         }
     }
+
+    .nowi-promo {
+        text-align: center;
+
+        &.nowi-promo__bottom {
+            margin-top: 1.5rem;
+        }
+
+        .nowi-promo--contact {
+            margin-top: 0.75rem;
+            display: block;
+        }
+    }
 }
 
 .gridjs {
