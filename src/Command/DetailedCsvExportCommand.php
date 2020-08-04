@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Serializer;
 
-class CustomCsvExportCommand extends Command
+class DetailedCsvExportCommand extends Command
 {
     protected static $defaultName = 'app:detailed-export';
 
@@ -37,7 +37,7 @@ class CustomCsvExportCommand extends Command
         $entries = $this->entryRepository->findAll();
 
         $dataArr = [
-            ['Id', 'Bedrijfsnaam', 'Vestigingsplaats', 'Bedrag', 'Lat', 'Long', 'Land code', 'Land naam', 'Admin niveau 1 (naam)', 'Admin niveau 1 (code)', 'Admin niveau 2 (naam)', 'Admin niveau 2 (code)', 'Admin niveau 3 (naam)', 'Admin niveau 3 (code)', 'Admin niveau 4 (naam)', 'Admin niveau 4 (code)'],
+            ['Id', 'Bedrijfsnaam', 'Vestigingsplaats', 'Bedrag', 'Lat', 'Long', 'Land code', 'Land naam', 'Plaats niveau 1 (naam)', 'Plaats niveau 1 (code)', 'Plaats niveau 2 (naam)', 'Plaats niveau 2 (code)', 'Plaats niveau 3 (naam)', 'Plaats niveau 3 (code)', 'Plaats niveau 4 (naam)', 'Plaats niveau 4 (code)'],
         ];
 
         foreach ($entries as $entry) {
@@ -53,10 +53,8 @@ class CustomCsvExportCommand extends Command
             ];
 
             foreach ($entry->getPlace()->getAdminLevels() as $adminLevel) {
-                $tempArr[] = [
-                    $adminLevel->getName(),
-                    $adminLevel->getCode(),
-                ];
+                $tempArr[] = $adminLevel->getName();
+                $tempArr[] = $adminLevel->getCode();
             }
 
             $dataArr[] = $tempArr;
