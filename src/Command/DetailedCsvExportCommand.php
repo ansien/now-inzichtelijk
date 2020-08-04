@@ -37,7 +37,7 @@ class DetailedCsvExportCommand extends Command
         $entries = $this->entryRepository->findAll();
 
         $dataArr = [
-            ['Id', 'Bedrijfsnaam', 'Vestigingsplaats', 'Bedrag', 'Lat', 'Long', 'Land code', 'Land naam', 'Plaats niveau 1 (naam)', 'Plaats niveau 1 (code)', 'Plaats niveau 2 (naam)', 'Plaats niveau 2 (code)', 'Plaats niveau 3 (naam)', 'Plaats niveau 3 (code)', 'Plaats niveau 4 (naam)', 'Plaats niveau 4 (code)'],
+            ['Id', 'Bedrijfsnaam', 'Vestigingsplaats', 'Bedrag', 'Pagina', 'Lat', 'Long', 'Land code', 'Land naam', 'Plaats niveau 1 (naam)', 'Plaats niveau 1 (code)', 'Plaats niveau 2 (naam)', 'Plaats niveau 2 (code)', 'Plaats niveau 3 (naam)', 'Plaats niveau 3 (code)', 'Plaats niveau 4 (naam)', 'Plaats niveau 4 (code)'],
         ];
 
         foreach ($entries as $entry) {
@@ -46,6 +46,7 @@ class DetailedCsvExportCommand extends Command
                 $entry->getCompanyName(),
                 $entry->getPlace()->getName(),
                 $entry->getAmount(),
+                $entry->getPageNumber(),
                 $entry->getPlace()->getLatitude(),
                 $entry->getPlace()->getLongitude(),
                 $entry->getPlace()->getCountry() ? $entry->getPlace()->getCountry()->getCode() : null,

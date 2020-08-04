@@ -40,13 +40,19 @@ class FirstBatchEntry
      */
     private int $amount;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private int $pageNumber;
+
     // endregion
 
-    public function __construct(string $companyName, BatchEntryPlace $place, int $amount)
+    public function __construct(string $companyName, BatchEntryPlace $place, int $amount, int $pageNumber)
     {
         $this->companyName = $companyName;
         $this->place = $place;
         $this->amount = $amount;
+        $this->pageNumber = $pageNumber;
     }
 
     // region Getters
@@ -69,6 +75,11 @@ class FirstBatchEntry
     public function getAmount(): int
     {
         return $this->amount;
+    }
+
+    public function getPageNumber(): int
+    {
+        return $this->pageNumber;
     }
 
     // endregion

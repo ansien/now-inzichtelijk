@@ -62,6 +62,83 @@ class HydratePlacesCommand extends Command
             'requiresHydration' => true,
         ]);
 
+        $additions = [
+            'BEST' => 'Nederland',
+            'BARCELONA' => 'Spanje',
+            'MALDEN' => 'Nederland',
+            'DORST' => 'Nederland',
+            'MADE' => 'Nederland',
+            'GEFFEN' => 'Nederland',
+            'VEEN' => 'Nederland',
+            'LINDEN' => 'Nederland',
+            'HAAR' => 'Duitsland',
+            'WARNS' => 'Nederland',
+            'HANDEL' => 'Nederland',
+            'HOOGLAND' => 'Nederland',
+            'HERTEN' => 'Nederland',
+            'ERICA' => 'Nederland',
+            'HORN' => 'Nederland',
+            'HANK' => 'Nederland',
+            'ELIM' => 'Nederland',
+            'THORN' => 'Maasgauw Limburg Nederland',
+            'WARTEN' => 'Nederland',
+            'AMERICA' => 'Nederland',
+            'RUTTEN' => 'Nederland',
+            'LENGEL' => 'Nederland',
+            'HERTS' => 'England',
+            'NUTTER' => 'Nederland',
+            'RHA' => 'Nederland',
+            'ERM' => 'Nederland',
+            'WELL LB' => 'Nederland',
+            'AMEN' => 'Nederland',
+            'NUIS' => 'Nederland',
+            'HELDEN' => 'Nederland',
+            'HALL' => 'Gelderland Nederland',
+            'LOON' => 'Assen Nederland',
+            'MUSSEL' => 'Groningen Nederland',
+            'PEER' => 'Belgie',
+            'EEN' => 'Drenthe Nederland',
+            'SCHERMERHORN' => 'Nederland',
+            'PETTEN' => 'Nederland',
+            'BALLOO' => 'Nederland',
+            'INGBER' => 'Nederland',
+            'EST' => 'Gelderland Nederland',
+            'ALTORF' => 'Frankrijk',
+            'ERIKA' => 'Drenthe Nederland',
+            'BAARD' => 'Nederland',
+            'BRISTOL' => 'England',
+            'MERING' => 'Belgie',
+            'LIES' => 'Noord-Brabant Nederland',
+            'WANGEN' => 'Duitsland',
+            'GRAFT' => 'Nederland',
+            'EXETER' => 'England',
+            'WECKER' => 'England',
+            'LINDE DR' => 'Drenthe Nederland',
+            'BROEKHUIZEN DR' => 'Drenthe Nederland',
+            'DEMEN' => 'Noord-Brabant Nederland',
+            'NOTTER' => 'Nederland',
+            'HOBOKEN' => 'Belgie',
+            'PIETA' => 'Malta',
+            'ERP' => 'Nederland',
+            'MEER' => 'Antwerpen Belgie',
+            'BAAK' => 'Nederland',
+            'MILL' => 'Nederland',
+            'WETERING' => 'Nederland',
+            'PHILIPPINE' => 'Zeeland Nederland',
+            'OFFENBACH' => 'Duitsland',
+            'HEM' => 'Nederland',
+            'ZAIO' => 'Marokko',
+            'PEEBLES' => 'Schotland',
+        ];
+
+        $replacements = [
+            'BAAR' => 'Nederhorst Den Berg',
+            'BALLINGSLOV' => 'Ballingslöv Zweden',
+            'GROSSENZELL' => 'Groebenzell Duitsland',
+            'HOLTE RUNENSDAL' => 'Amsterdam',
+            'DE POL' => 'Sint Geertruid, Nederland',
+        ];
+
         $httpClient = new Client();
         $provider = new GoogleMaps($httpClient, 'europe-west4', $this->googleMapsApiKey);
         $geocoder = new StatefulGeocoder($provider, 'nl');
@@ -71,8 +148,16 @@ class HydratePlacesCommand extends Command
 
             $this->clearHydration($place);
 
+            $placeName = $place->getName();
+
+            if (array_key_exists(strtoupper($placeName), $additions) === true) {
+                $placeName .= ' ' . $additions[strtoupper($placeName)];
+            } elseif (array_key_exists(strtoupper($placeName), $replacements) === true) {
+                $placeName = $replacements[strtoupper($placeName)];
+            }
+
             try {
-                $result = $geocoder->geocodeQuery(GeocodeQuery::create($place->getName()));
+                $result = $geocoder->geocodeQuery(GeocodeQuery::create($placeName));
             } catch (Exception $e) {
                 $io->writeln("Failed @ {$place->getName()}, skipping...");
 
@@ -108,13 +193,25 @@ class HydratePlacesCommand extends Command
 
     private function clearHydration(BatchEntryPlace $place): void
     {
+        $country = $place->getCountry();
+
         $place
             ->setLatitude(null)
             ->setLongitude(null)
             ->setCountry(null);
 
+        if ($country !== null && $country->getPlaces()->count() <= 0) {
+            $this->entityManager->remove($country);
+            $this->entityManager->flush();
+        }
+
         foreach ($place->getAdminLevels() as $adminLevel) {
             $place->removeAdminLevel($adminLevel);
+
+            if ($adminLevel->getPlaces()->count() <= 0) {
+                $this->entityManager->remove($adminLevel);
+                $this->entityManager->flush();
+            }
         }
     }
 

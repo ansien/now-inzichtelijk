@@ -60,10 +60,9 @@ class ImportFirstBatchCommand extends Command
                 continue;
             }
 
-            $amount = $csvLine[3];
-            $place = $this->findOrCreatePlace($csvLine[2]);
+            $place = $this->findOrCreatePlace(trim($csvLine[2]));
 
-            $registryLine = new FirstBatchEntry($csvLine[1], $place, (int) $amount);
+            $registryLine = new FirstBatchEntry($csvLine[1], $place, (int) $csvLine[3], (int) $csvLine[4]);
             $this->entityManager->persist($registryLine);
 
             if ($i % 10000 === 0) {
