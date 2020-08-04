@@ -48,4 +48,41 @@ class FirstBatchEntry
         $this->place = $place;
         $this->amount = $amount;
     }
+
+
+    // region Getters
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCompanyName(): string
+    {
+        return $this->companyName;
+    }
+
+    /**
+     * @return BatchEntryPlace
+     */
+    public function getPlace(): BatchEntryPlace
+    {
+        return $this->place;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    // endregion
 }

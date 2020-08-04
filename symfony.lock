@@ -135,6 +135,12 @@
             "./.php_cs.dist"
         ]
     },
+    "geocoder-php/common-http": {
+        "version": "4.3.0"
+    },
+    "geocoder-php/google-maps-provider": {
+        "version": "4.5.0"
+    },
     "gitonomy/gitlib": {
         "version": "v1.2.1"
     },
@@ -654,6 +660,9 @@
     },
     "webmozart/assert": {
         "version": "1.9.1"
+    },
+    "willdurand/geocoder": {
+        "version": "4.3.0"
     },
     "zendframework/zend-code": {
         "version": "3.4.1"
