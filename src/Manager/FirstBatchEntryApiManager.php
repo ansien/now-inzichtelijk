@@ -65,7 +65,7 @@ class FirstBatchEntryApiManager
             }
         }
 
-        if ($this->kernel->getEnvironment() !== 'prod') {
+        if (strtoupper($this->kernel->getEnvironment()) !== 'PROD') {
             $data['cacheHit'] = !($cacheData === null);
         }
 

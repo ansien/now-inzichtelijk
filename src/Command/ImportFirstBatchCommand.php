@@ -42,7 +42,7 @@ class ImportFirstBatchCommand extends Command
         if (!$fileContent) {
             $io->success('Failed to open file');
 
-            return 0;
+            return self::FAILURE;
         }
 
         $serializer = new Serializer([], [new CsvEncoder([
@@ -76,7 +76,7 @@ class ImportFirstBatchCommand extends Command
 
         $io->success('Finished importing batch one');
 
-        return 0;
+        return self::SUCCESS;
     }
 
     private function findOrCreatePlace(string $placeName): BatchEntryPlace
