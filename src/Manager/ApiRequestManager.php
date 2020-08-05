@@ -19,6 +19,7 @@ class ApiRequestManager
     public function saveApiRequest(string $endpoint, array $query): void
     {
         $searchQuery = new ApiRequest($endpoint, $query);
+
         $this->entityManager->persist($searchQuery);
         $this->entityManager->flush();
     }

@@ -188,7 +188,7 @@ class HydratePlacesCommand extends Command
 
         $io->success('Finished hydrating places');
 
-        return 0;
+        return self::SUCCESS;
     }
 
     private function clearHydration(BatchEntryPlace $place): void

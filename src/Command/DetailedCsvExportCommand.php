@@ -9,6 +9,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Serializer;
 
@@ -66,13 +67,10 @@ class DetailedCsvExportCommand extends Command
             CsvEncoder::DELIMITER_KEY => ';',
         ])]);
 
-        file_put_contents(
-            './public/file/first-batch-detailed.csv',
-            $serializer->encode($dataArr, 'csv')
-        );
+        (new Filesystem())->dumpFile('./public/file/first-batch-detailed.csv', $serializer->encode($dataArr, 'csv'));
 
         $io->success('Finished exporting');
 
-        return 0;
+        return self::SUCCESS;
     }
 }
