@@ -10,6 +10,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Serializer\Encoder\CsvEncoder;
 use Symfony\Component\Serializer\Serializer;
 
@@ -39,7 +40,7 @@ class ConvertFirstBatchCommand extends Command
         } catch (Exception $e) {
             $io->error('Failed to parse PDF');
 
-            return 1;
+            return self::FAILURE;
         }
 
         $dataArr = [['Id', 'Bedrijfsnaam', 'Vestigingsplaats', 'Bedrag', 'Pagina']];
@@ -98,13 +99,10 @@ class ConvertFirstBatchCommand extends Command
             CsvEncoder::DELIMITER_KEY => ';',
         ])]);
 
-        file_put_contents(
-            './public/file/first-batch.csv',
-            $serializer->encode($dataArr, 'csv')
-        );
+        (new Filesystem())->dumpFile('./public/file/first-batch.csv', $serializer->encode($dataArr, 'csv'));
 
         $io->success('Finished converting batch one');
 
-        return 0;
+        return self::SUCCESS;
     }
 }

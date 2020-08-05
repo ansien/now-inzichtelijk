@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class FirstBatchApiController extends AbstractController
+final class FirstBatchApiController extends AbstractController
 {
     private FirstBatchEntryApiManager $firstBatchEntryApiManager;
     private ApiRequestManager $apiRequestManager;
