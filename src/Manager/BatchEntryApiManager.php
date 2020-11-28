@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Manager;
 
-use App\Entity\FirstBatchEntry;
-use App\Entity\SecondBatchEntry;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\BatchEntryRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -19,18 +16,18 @@ use Symfony\Component\HttpKernel\KernelInterface;
 class BatchEntryApiManager
 {
     private const PAGE_SIZE = 15;
-    private const FIRST_BATCH_CACHE_KEY = 'api_batch_entry:';
+    private const CACHE_KEY = 'api_batch_entry:';
 
-    private EntityManagerInterface $entityManager;
+    private BatchEntryRepository $batchEntryRepository;
     private CacheManager $cacheManager;
     private KernelInterface $kernel;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
+        BatchEntryRepository $batchEntryRepository,
         CacheManager $cacheManager,
         KernelInterface $kernel
     ) {
-        $this->entityManager = $entityManager;
+        $this->batchEntryRepository = $batchEntryRepository;
         $this->cacheManager = $cacheManager;
         $this->kernel = $kernel;
     }
@@ -38,11 +35,11 @@ class BatchEntryApiManager
     /**
      * @throws JsonException | InvalidArgumentException
      */
-    public function getBatchEntries(int $batch, int $page, ?string $orderString, ?string $searchString): array
+    public function getBatchEntries(int $page, ?string $orderString, ?string $searchString): array
     {
         $page = max($page, 1);
 
-        $cacheKey = base64_encode(self::FIRST_BATCH_CACHE_KEY . $batch . $page . $orderString . $searchString);
+        $cacheKey = base64_encode(self::CACHE_KEY . $page . $orderString . $searchString);
         $cacheClient = $this->cacheManager->getClient();
 
         $cacheData = null;
@@ -54,16 +51,8 @@ class BatchEntryApiManager
             $cacheFailed = true;
         }
 
-        if ($batch === 1) {
-            $repository = $this->entityManager->getRepository(FirstBatchEntry::class);
-        } elseif ($batch === 2) {
-            $repository = $this->entityManager->getRepository(SecondBatchEntry::class);
-        } else {
-            throw new InvalidArgumentException('Unsupported batch number provided');
-        }
-
         if ($cacheData === null || $cacheFailed === true) {
-            $data = $this->getBatchEntriesFromDatabase($repository, $page, $orderString, $searchString);
+            $data = $this->getBatchEntriesFromDatabase($page, $orderString, $searchString);
 
             if ($cacheFailed === false) {
                 $encodedData = json_encode($data, JSON_THROW_ON_ERROR);
@@ -84,17 +73,14 @@ class BatchEntryApiManager
         return $data;
     }
 
-    private function getBatchEntriesFromDatabase(ServiceEntityRepository $repository, int $page, ?string $orderString, ?string $searchString): array
+    private function getBatchEntriesFromDatabase(int $page, ?string $orderString, ?string $searchString): array
     {
-        $qb = $repository->createQueryBuilder('rl')
-            ->addSelect('rl.id, rl.companyName, p.name as placeName, rl.amount')
-            ->leftJoin('rl.place', 'p')
+        $qb = $this->batchEntryRepository->createQueryBuilder('be')
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
-        $totalAmountQb = $repository->createQueryBuilder('rl')
-            ->select('SUM(rl.amount)')
-            ->leftJoin('rl.place', 'p');
+        $totalAmountQb = $this->batchEntryRepository->createQueryBuilder('be')
+            ->select('SUM(be.totalAmount)');
 
         if ($searchString) {
             try {
@@ -105,12 +91,12 @@ class BatchEntryApiManager
 
             if (!empty($searchData)) {
                 if (array_key_exists('companyName', $searchData)) {
-                    $qb->andWhere('rl.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
-                    $totalAmountQb->andWhere('rl.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
+                    $qb->join('be.place', 'p')->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
+                    $totalAmountQb->join('be.place', 'p')->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
                 }
                 if (array_key_exists('placeName', $searchData)) {
-                    $qb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
-                    $totalAmountQb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
+                    $qb->join('be.place', 'p')->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
+                    $totalAmountQb->join('be.place', 'p')->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
                 }
             }
         }
@@ -124,16 +110,24 @@ class BatchEntryApiManager
 
             if (!empty($orderData)) {
                 if (array_key_exists('companyName', $orderData)) {
-                    $qb->addOrderBy('rl.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('rl.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $qb->addOrderBy('be.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('be.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
                 }
                 if (array_key_exists('placeName', $orderData)) {
-                    $qb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $qb->join('be.place', 'p')->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->join('be.place', 'p')->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
                 }
-                if (array_key_exists('amount', $orderData)) {
-                    $qb->addOrderBy('rl.amount', strtoupper($orderData['amount']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('rl.amount', strtoupper($orderData['amount']) === 'ASC' ? 'ASC' : 'DESC');
+                if (array_key_exists('firstAmount', $orderData)) {
+                    $qb->addOrderBy('be.firstAmount', strtoupper($orderData['firstAmount']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('be.firstAmount', strtoupper($orderData['firstAmount']) === 'ASC' ? 'ASC' : 'DESC');
+                }
+                if (array_key_exists('secondAmount', $orderData)) {
+                    $qb->addOrderBy('be.secondAmount', strtoupper($orderData['secondAmount']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('be.secondAmount', strtoupper($orderData['secondAmount']) === 'ASC' ? 'ASC' : 'DESC');
+                }
+                if (array_key_exists('totalAmount', $orderData)) {
+                    $qb->addOrderBy('be.totalAmount', strtoupper($orderData['totalAmount']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('be.totalAmount', strtoupper($orderData['totalAmount']) === 'ASC' ? 'ASC' : 'DESC');
                 }
             }
         }
@@ -143,10 +137,12 @@ class BatchEntryApiManager
 
         foreach ($paginator as $l) {
             $result[] = [
-                'id' => $l['id'],
-                'companyName' => $l['companyName'],
-                'placeName' => $l['placeName'],
-                'amount' => $l['amount'],
+                'id' => $l->getId(),
+                'companyName' => $l->getCompanyName(),
+                'placeName' => $l->getPlace()->getName(),
+                'firstAmount' => $l->getFirstAmount(),
+                'secondAmount' => $l->getSecondAmount(),
+                'totalAmount' => $l->getTotalAmount(),
             ];
         }
 

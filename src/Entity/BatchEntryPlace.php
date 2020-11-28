@@ -27,7 +27,7 @@ class BatchEntryPlace
     private int $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\FirstBatchEntry", mappedBy="place")
+     * @ORM\OneToMany(targetEntity="App\Entity\BatchEntry", mappedBy="place")
      */
     private Collection $entries;
 

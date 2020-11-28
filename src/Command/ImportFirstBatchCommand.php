@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\BatchEntry;
 use App\Entity\BatchEntryPlace;
-use App\Entity\FirstBatchEntry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -59,8 +59,8 @@ class ImportFirstBatchCommand extends Command
             $place = $this->findOrCreatePlace(trim($csvLine[1]));
             $amount = str_replace(['.', ','], '', $csvLine[2]);
 
-            $registryLine = new FirstBatchEntry($csvLine[0], $place, (int) $amount);
-            $this->entityManager->persist($registryLine);
+            $entry = new BatchEntry($csvLine[0], $place, (int) $amount, 0, (int) $amount);
+            $this->entityManager->persist($entry);
 
             if ($i > 0 && $i % 10000 === 0) {
                 $this->entityManager->flush();

@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Entity\BatchEntry;
 use App\Entity\BatchEntryPlace;
-use App\Entity\SecondBatchEntry;
+use App\Repository\BatchEntryPlaceRepository;
+use App\Repository\BatchEntryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,11 +21,17 @@ class ImportSecondBatchCommand extends Command
     protected static $defaultName = 'app:import-second-batch';
 
     private EntityManagerInterface $entityManager;
-    private array $createdPlaces = [];
+    private BatchEntryRepository $batchEntryRepository;
+    private BatchEntryPlaceRepository $batchEntryPlaceRepository;
 
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        BatchEntryRepository $batchEntryRepository,
+        BatchEntryPlaceRepository $batchEntryPlaceRepository
+    ) {
         $this->entityManager = $entityManager;
+        $this->batchEntryRepository = $batchEntryRepository;
+        $this->batchEntryPlaceRepository = $batchEntryPlaceRepository;
 
         parent::__construct();
     }
@@ -56,13 +64,9 @@ class ImportSecondBatchCommand extends Command
 
         $i = 0;
         foreach ($csvContent as $csvLine) {
-            $place = $this->findOrCreatePlace(trim($csvLine[1]));
-            $amount = str_replace(['.', ','], '', $csvLine[2]);
+            $this->findOrCreateEntry($csvLine);
 
-            $registryLine = new SecondBatchEntry($csvLine[0], $place, (int) $amount);
-            $this->entityManager->persist($registryLine);
-
-            if ($i > 0 && $i % 10000 === 0) {
+            if ($i > 0 && $i % 2500 === 0) {
                 $this->entityManager->flush();
                 $io->writeln("Flushing @ ${i}");
             }
@@ -79,16 +83,37 @@ class ImportSecondBatchCommand extends Command
 
     private function findOrCreatePlace(string $placeName): BatchEntryPlace
     {
-        if (array_key_exists($placeName, $this->createdPlaces)) {
-            return $this->createdPlaces[$placeName];
+        $existingPlace = $this->batchEntryPlaceRepository->findOneBy([
+            'name' => $placeName,
+        ]);
+
+        if ($existingPlace) {
+            return $existingPlace;
         }
 
         $place = new BatchEntryPlace($placeName);
         $this->entityManager->persist($place);
-        $this->createdPlaces[$placeName] = $place;
-
-        dump($placeName);
+        $this->entityManager->flush();
 
         return $place;
+    }
+
+    private function findOrCreateEntry(array $csvLine): void
+    {
+        $place = $this->findOrCreatePlace(trim($csvLine[1]));
+        $amount = str_replace(['.', ','], '', $csvLine[2]);
+
+        $existingEntries = $this->batchEntryRepository->findBy([
+            'companyName' => $csvLine[0],
+            'place' => $place,
+        ]);
+
+        if (count($existingEntries) === 1) { // If able to match on name and place, add amount to existing entry, otherwise; create new one
+            $existingEntries[0]->setSecondAmount((int) $amount);
+            $existingEntries[0]->setTotalAmount($existingEntries[0]->getTotalAmount() + (int) $amount);
+        } else {
+            $entry = new BatchEntry($csvLine[0], $place, 0, (int) $amount, (int) $amount);
+            $this->entityManager->persist($entry);
+        }
     }
 }
