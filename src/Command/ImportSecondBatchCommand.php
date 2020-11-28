@@ -104,7 +104,7 @@ class ImportSecondBatchCommand extends Command
         $amount = str_replace(['.', ','], '', $csvLine[2]);
 
         $existingEntries = $this->batchEntryRepository->findBy([
-            'companyName' => $csvLine[0],
+            'companyName' => trim($csvLine[0]),
             'place' => $place,
         ]);
 
@@ -112,7 +112,7 @@ class ImportSecondBatchCommand extends Command
             $existingEntries[0]->setSecondAmount((int) $amount);
             $existingEntries[0]->setTotalAmount($existingEntries[0]->getTotalAmount() + (int) $amount);
         } else {
-            $entry = new BatchEntry($csvLine[0], $place, 0, (int) $amount, (int) $amount);
+            $entry = new BatchEntry(trim($csvLine[0]), $place, 0, (int) $amount, (int) $amount);
             $this->entityManager->persist($entry);
         }
     }

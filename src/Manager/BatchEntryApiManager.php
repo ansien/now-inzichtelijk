@@ -76,11 +76,13 @@ class BatchEntryApiManager
     private function getBatchEntriesFromDatabase(int $page, ?string $orderString, ?string $searchString): array
     {
         $qb = $this->batchEntryRepository->createQueryBuilder('be')
+            ->join('be.place', 'p')
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
         $totalAmountQb = $this->batchEntryRepository->createQueryBuilder('be')
-            ->select('SUM(be.totalAmount)');
+            ->select('SUM(be.totalAmount)')
+            ->join('be.place', 'p');
 
         if ($searchString) {
             try {
@@ -91,12 +93,12 @@ class BatchEntryApiManager
 
             if (!empty($searchData)) {
                 if (array_key_exists('companyName', $searchData)) {
-                    $qb->join('be.place', 'p')->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
-                    $totalAmountQb->join('be.place', 'p')->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
+                    $qb->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
+                    $totalAmountQb->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
                 }
                 if (array_key_exists('placeName', $searchData)) {
-                    $qb->join('be.place', 'p')->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
-                    $totalAmountQb->join('be.place', 'p')->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
+                    $qb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
+                    $totalAmountQb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
                 }
             }
         }
@@ -114,8 +116,8 @@ class BatchEntryApiManager
                     $totalAmountQb->addOrderBy('be.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
                 }
                 if (array_key_exists('placeName', $orderData)) {
-                    $qb->join('be.place', 'p')->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->join('be.place', 'p')->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $qb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
+                    $totalAmountQb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
                 }
                 if (array_key_exists('firstAmount', $orderData)) {
                     $qb->addOrderBy('be.firstAmount', strtoupper($orderData['firstAmount']) === 'ASC' ? 'ASC' : 'DESC');

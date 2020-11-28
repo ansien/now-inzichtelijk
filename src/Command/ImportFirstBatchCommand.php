@@ -59,7 +59,7 @@ class ImportFirstBatchCommand extends Command
             $place = $this->findOrCreatePlace(trim($csvLine[1]));
             $amount = str_replace(['.', ','], '', $csvLine[2]);
 
-            $entry = new BatchEntry($csvLine[0], $place, (int) $amount, 0, (int) $amount);
+            $entry = new BatchEntry(trim($csvLine[0]), $place, (int) $amount, 0, (int) $amount);
             $this->entityManager->persist($entry);
 
             if ($i > 0 && $i % 10000 === 0) {
