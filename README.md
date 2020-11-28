@@ -18,10 +18,10 @@
 
 # Handige commands
 ```sh
-# Convert all batches from TXT to CSV
+# Converteer alle batches van TXT naar CSV
 php bin/console app:convert-first-batch && php bin/console app:convert-second-batch
 
-# Clear db and re-import all batches
+# Drop de database en herimporteer de CSV bestanden
 php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-first-batch && php bin/console app:import-second-batch
 
 # Deploy
