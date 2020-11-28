@@ -6,7 +6,7 @@ const GRID_API_URL = '/api/v1/batch-entry';
 
 const handleApiData = (data) => {
     $('.grid-total').text(moneyFormatter.format(data.data['totalAmount']));
-    $('.grid-average').text(moneyFormatter.format(data.data['totalAmount'] / data.data['totalResults']));
+    $('.grid-average').text(moneyFormatter.format(data.data['totalAmount'] / (data.data['totalResults'] !== 0 ? data.data['totalResults'] : 1)));
 
     toggleGridTotals(true);
 
