@@ -75,14 +75,15 @@ class ConvertSecondBatchCommand extends Command
 
         if ((count($result) !== 3) || $result[0] === 'BEDRIJFSNAAM') { // Filter headers/footers and empty lines
             if (
-                self::DEBUG_ENABLED && count($result) > 0
+                self::DEBUG_ENABLED
+                && count($result) > 0
                 && !empty($result[0])
                 && $result[0] !== 'BEDRIJFSNAAM'
                 && !is_numeric($result[0])
                 && $result[0] !== 'VOORSCHOTBEDRAG'
                 && $result[0] !== 'Register NOW, tweede aanvraagperiode'
             ) {
-                dump($lineNumber, $result);
+                $this->io->warning("$lineNumber: $result");
             }
 
             return null;

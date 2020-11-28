@@ -74,8 +74,15 @@ class ConvertFirstBatchCommand extends Command
         $result = preg_split('/\h{2,}/', trim($line));
 
         if ((count($result) !== 3) || $result[0] === 'BEDRIJFSNAAM') { // Filter headers/footers and empty lines
-            if (self::DEBUG_ENABLED && count($result) > 0 && !empty($result[0]) && $result[0] !== 'BEDRIJFSNAAM' && !is_numeric($result[0]) && $result[0] !== 'VOORSCHOTBEDRAG') {
-                dump($lineNumber, $result);
+            if (
+                self::DEBUG_ENABLED
+                && count($result) > 0
+                && !empty($result[0])
+                && $result[0] !== 'BEDRIJFSNAAM'
+                && !is_numeric($result[0])
+                && $result[0] !== 'VOORSCHOTBEDRAG'
+            ) {
+                $this->io->warning("$lineNumber: $result");
             }
 
             return null;
