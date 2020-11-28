@@ -9,8 +9,6 @@ parameters:
 services:
     # default configuration for services in *this* file
     _defaults:
-        bind:
-            $googleMapsApiKey: '%env(GOOGLE_MAPS_API_KEY)%'
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 

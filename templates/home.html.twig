@@ -16,13 +16,6 @@
             </p>
         </div>
 
-        <div class="nowi-promo card text-white bg-primary">
-            <div class="card-body">
-                Op zoek naar een gratis corona bezoekers gegevens registratie systeem voor uw (horeca) bedrijf?<br>
-                <small class="nowi-promo--contact"><a href="http://corona-formulier.nl" target="_blank">Corona Formulier</a></small>
-            </div>
-        </div>
-
         <hr>
 
         <div class="row mt-4 text-center">
@@ -33,7 +26,7 @@
                     </div>
                     <div class="card-body">
                         <h3 class="card-title mb-0">
-                            € 7.776.975.944
+                            € 12.018.629.907
                         </h3>
                     </div>
                 </div>
@@ -45,7 +38,7 @@
                     </div>
                     <div class="card-body">
                         <h3 class="card-title mb-0">
-                            138.966
+                            202.595
                         </h3>
                     </div>
                 </div>
@@ -57,7 +50,7 @@
                     </div>
                     <div class="card-body">
                         <h3 class="card-title mb-0">
-                            € 55.963
+                            € 59.323
                         </h3>
                     </div>
                 </div>
@@ -70,8 +63,8 @@
                     <a class="nowi-nav__item nav-item nav-link active" id="now-1-tab" data-toggle="tab" href="#now-1" role="tab" aria-controls="now-1" aria-selected="true">
                         NOW 1.0 <span class="d-none d-lg-inline">Register</span>
                     </a>
-                    <a class="nowi-nav__item nav-item nav-link disabled" id="now-2-tab" data-toggle="tab" href="#now-2" role="tab" aria-controls="now-2" aria-selected="false">
-                        <s>NOW 2.0 </s><span class="d-none d-lg-inline"><s>Register</s></span> 🔜
+                    <a class="nowi-nav__item nav-item nav-link" id="now-2-tab" data-toggle="tab" href="#now-2" role="tab" aria-controls="now-2" aria-selected="false">
+                        NOW 2.0 <span class="d-none d-lg-inline">Register</span>
                     </a>
                     <a class="nowi-nav__item nav-item nav-link disabled" id="now-definitief-tab" data-toggle="tab" href="#now-definitief" role="tab" aria-controls="now-definitief" aria-selected="false">
                         <s>Definitief </s><span class="d-none d-lg-inline"><s>Register</s></span> 🔜
@@ -79,44 +72,8 @@
                 </div>
             </nav>
             <div class="tab-content">
-                <div class="tab-pane fade show first-batch-tab active" id="now-1" role="tabpanel" aria-labelledby="now-1-tab">
-                    <div class="search-inputs row mt-4">
-                        <div class="col-md-6 col-xs-12">
-                            <input type="search" placeholder="💼 Zoek op bedrijfsnaam" aria-label="💼 Zoek op bedrijfsnaam" class="form-control search-company mb-3">
-                        </div>
-                        <div class="col-md-6 col-xs-12">
-                            <input type="search" placeholder="🏙️ Zoek op vestigingsplaats" aria-label="🏙️ Zoek op vestigingsplaats" class="form-control search-place mb-3">
-                        </div>
-                    </div>
-                    <div id="first-batch-grid"></div>
-
-                    <div class="nowi-grid-totals row mt-2">
-                        <div class="col-12 col-md-6 mb-2 mb-md-0">
-                            <div class="nowi-grid-total card">
-                                <div class="nowi-grid-total__body card-body">
-                                    <span class="nowi-grid-total__content">
-                                        <strong>Totaal: </strong><span class="first-batch-grid-total"></span>
-                                    </span>
-                                    <span class="nowi-grid-total__loader">
-                                        <i class="fas fa-spinner fa-pulse"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <div class="nowi-grid-total card">
-                                <div class="nowi-grid-total__body card-body">
-                                    <span class="nowi-grid-total__content">
-                                        <strong>Gemiddelde: </strong><span class="first-batch-grid-average"></span>
-                                    </span>
-                                    <span class="nowi-grid-total__loader">
-                                        <i class="fas fa-spinner fa-pulse"></i>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'partials/first-batch-tab.html.twig' %}
+                {% include 'partials/second-batch-tab.html.twig' %}
             </div>
         </div>
 
@@ -188,13 +145,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="nowi-promo nowi-promo__bottom card text-white bg-primary">
-                    <div class="card-body">
-                        Op zoek naar een gratis corona bezoekers gegevens registratie systeem voor uw (horeca) bedrijf?<br>
-                        <small class="nowi-promo--contact"><a href="http://corona-formulier.nl" target="_blank">Corona Formulier</a></small>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -206,9 +156,8 @@
             <h5 class="mb-3">Links</h5>
             <ul class="nowi-footer-list list-unstyled text-small">
                 <li class="nowi-footer-list__link"><a class="text-muted" href="https://twitter.com/share?text=Welke%20bedrijven%20hebben%20NOW%20noodsteun%20ontvangen%3F%20Zie%3A%20&url=https://now-inzichtelijk.nl" target="_blank" rel="noreferrer">Deel op Twitter 🔗</a></li>
-                <li class="nowi-footer-list__link"><a class="text-muted" href="{{ asset('file/first-batch.pdf') }}" target="_blank">Bron (PDF) 📄</a></li>
-                <li class="nowi-footer-list__link"><a class="text-muted" href="{{ asset('file/first-batch.csv') }}" target="_blank">Bron (CSV - Simpel) 📝</a></li>
-                <li class="nowi-footer-list__link"><a class="text-muted" href="{{ asset('file/first-batch-detailed.csv') }}" target="_blank">Bron (CSV - Uitgebreid) 📑</a></li>
+                <li class="nowi-footer-list__link"><a class="text-muted" href="{{ asset('file/first-batch/first-batch.csv') }}" target="_blank">Bron 1.0 (CSV) 📄</a></li>
+                <li class="nowi-footer-list__link"><a class="text-muted" href="{{ asset('file/second-batch/second-batch.csv') }}" target="_blank">Bron 2.0 (CSV) 📄</a></li>
                 <li class="nowi-footer-list__link"><a class="text-muted" href="https://github.com/ansien/now-inzichtelijk" target="_blank" rel="noreferrer">GitHub ‍🔧</a></li>
             </ul>
         </footer>

@@ -27,17 +27,6 @@ class BatchEntryPlace
     private int $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\BatchEntryCountry", inversedBy="places")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private ?BatchEntryCountry $country;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\BatchEntryAdminLevel", inversedBy="places")
-     */
-    private Collection $adminLevels;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\FirstBatchEntry", mappedBy="place")
      */
     private Collection $entries;
@@ -47,110 +36,25 @@ class BatchEntryPlace
      */
     private string $name;
 
-    /**
-     * @ORM\Column(type="decimal", precision=10, scale=8, nullable=true)
-     */
-    private ?string $latitude = null;
-
-    /**
-     * @ORM\Column(type="string", precision=10, scale=8, nullable=true)
-     */
-    private ?string $longitude = null;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
-    private bool $requiresHydration;
-
     // endregion
 
     public function __construct(string $name)
     {
         $this->name = $name;
-        $this->requiresHydration = true;
 
         $this->entries = new ArrayCollection();
-        $this->adminLevels = new ArrayCollection();
     }
 
     // region Getters
 
-    public function getCountry(): ?BatchEntryCountry
+    public function getId(): int
     {
-        return $this->country;
-    }
-
-    /**
-     * @return Collection|BatchEntryAdminLevel[]
-     */
-    public function getAdminLevels(): Collection
-    {
-        return $this->adminLevels;
+        return $this->id;
     }
 
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getLatitude(): ?string
-    {
-        return $this->latitude;
-    }
-
-    public function getLongitude(): ?string
-    {
-        return $this->longitude;
-    }
-
-    // endregion
-
-    // region Setters
-
-    public function setCountry(?BatchEntryCountry $country): BatchEntryPlace
-    {
-        $this->country = $country;
-
-        return $this;
-    }
-
-    public function addAdminLevel(BatchEntryAdminLevel $adminLevel): self
-    {
-        if (!$this->adminLevels->contains($adminLevel)) {
-            $this->adminLevels[] = $adminLevel;
-        }
-
-        return $this;
-    }
-
-    public function removeAdminLevel(BatchEntryAdminLevel $adminLevel): self
-    {
-        if ($this->adminLevels->contains($adminLevel)) {
-            $this->adminLevels->removeElement($adminLevel);
-        }
-
-        return $this;
-    }
-
-    public function setLatitude(?string $latitude): BatchEntryPlace
-    {
-        $this->latitude = $latitude;
-
-        return $this;
-    }
-
-    public function setLongitude(?string $longitude): BatchEntryPlace
-    {
-        $this->longitude = $longitude;
-
-        return $this;
-    }
-
-    public function setRequiresHydration(bool $requiresHydration): BatchEntryPlace
-    {
-        $this->requiresHydration = $requiresHydration;
-
-        return $this;
     }
 
     // endregion

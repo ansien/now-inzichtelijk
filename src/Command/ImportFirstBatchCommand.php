@@ -37,7 +37,7 @@ class ImportFirstBatchCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $fileContent = file_get_contents('./public/file/first-batch.csv');
+        $fileContent = file_get_contents('./public/file/first-batch/first-batch.csv');
 
         if (!$fileContent) {
             $io->success('Failed to open file');
@@ -52,23 +52,22 @@ class ImportFirstBatchCommand extends Command
 
         $csvContent = $serializer->decode($fileContent, 'csv');
 
+        $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $i = 0;
         foreach ($csvContent as $csvLine) {
-            ++$i;
+            $place = $this->findOrCreatePlace(trim($csvLine[1]));
+            $amount = str_replace(['.', ','], '', $csvLine[2]);
 
-            if ($i <= 1) { // Skip header
-                continue;
-            }
-
-            $place = $this->findOrCreatePlace(trim($csvLine[2]));
-
-            $registryLine = new FirstBatchEntry($csvLine[1], $place, (int) $csvLine[3], (int) $csvLine[4]);
+            $registryLine = new FirstBatchEntry($csvLine[0], $place, (int) $amount);
             $this->entityManager->persist($registryLine);
 
-            if ($i % 10000 === 0) {
+            if ($i > 0 && $i % 10000 === 0) {
                 $this->entityManager->flush();
                 $io->writeln("Flushing @ ${i}");
             }
+
+            ++$i;
         }
 
         $this->entityManager->flush();

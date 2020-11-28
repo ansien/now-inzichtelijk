@@ -7,7 +7,7 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "cheprasov/php-redis-client": "^1.10",
-        "deployer/deployer": "^6.8",
+        "deployer/deployer": "v7.0.0-beta.11",
         "geocoder-php/google-maps-provider": "^4.5",
         "php-http/guzzle6-adapter": "^2.0",
         "sensio/framework-extra-bundle": "^5.1",

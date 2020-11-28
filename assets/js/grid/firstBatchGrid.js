@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { Grid } from 'gridjs';
 import { debounce, moneyFormatter, toggleGridTotals } from '../utils';
 
-const FIRST_BATCH_API_URL = '/api/v1/first-batch';
+const FIRST_BATCH_API_URL = '/api/v1/batch-entry?batch=1';
 
 const handleApiData = (data) => {
     $('.first-batch-grid-total').text(moneyFormatter.format(data.data['totalAmount']));
@@ -25,7 +25,7 @@ export const firstBatchGrid = new Grid({
     pagination: {
         limit: 15,
         server: {
-            url: (prev, page) => `${prev}${prev === FIRST_BATCH_API_URL ? '?' : '&'}page=${page + 1}`
+            url: (prev, page) => `${prev}&page=${page + 1}`
         }
     },
     sort: {
@@ -45,7 +45,7 @@ export const firstBatchGrid = new Grid({
                     orderStrings.push(`${colName}:${dir}`);
                 }
 
-                return `${prev}${prev === FIRST_BATCH_API_URL ? '?' : '&'}order=${orderStrings.join(',')}`;
+                return `${prev}&order=${orderStrings.join(',')}`;
             }
         }
     },
@@ -83,7 +83,7 @@ $(document).on('input', '.first-batch-tab .search-company, .first-batch-tab .sea
     if (searchStrings.length > 0) {
         firstBatchGrid.updateConfig({
             server: {
-                url: `${FIRST_BATCH_API_URL}?search=${searchStrings.join(',')}`,
+                url: `${FIRST_BATCH_API_URL}&search=${searchStrings.join(',')}`,
                 then: handleApiData,
                 total: (data) => data.data['totalResults']
             }

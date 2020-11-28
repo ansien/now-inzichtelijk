@@ -16,6 +16,18 @@
 4. Run de lokale ontwikkel server: `symfony serve`.
 5. (Optioneel) Draai de [Symfony Encore](https://symfony.com/doc/current/frontend.html) watcher via `yarn encore dev --watch` om frontend (CSS/JS) aanpassingen te compileren.
 
+# Handige commands
+```sh
+# Convert all batches from TXT to CSV
+php bin/console app:convert-first-batch && php bin/console app:convert-second-batch
+
+# Clear db and re-import all batches
+php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-first-batch && php bin/console app:import-second-batch
+
+# Deploy
+./vendor/bin/dep deploy production
+```
+
 ## Bijdrage doen
 
 1. Fork het project

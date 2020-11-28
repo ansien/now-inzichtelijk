@@ -4,14 +4,6 @@ grumphp:
         failed: ~
         succeeded: ~
     tasks:
-        composer:
-            no_check_publish: true
-        git_blacklist:
-            keywords:
-                - 'dump('
-                - 'die;'
-                - 'exit;'
-                - 'error_reporting'
         phpcsfixer2:
             allow_risky: false
             cache_file: ~
