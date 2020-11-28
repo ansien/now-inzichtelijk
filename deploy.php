@@ -55,11 +55,17 @@ task('deploy:assets:build', function () {
     run('cd {{release_path}} && {{bin/yarn}} install && {{bin/yarn}} encore production');
 });
 
+desc('Clean redis');
+task('deploy:redis:clear', static function () {
+    run('redis-cli FLUSHALL');
+});
+
 task('deploy', [
     'deploy:prepare',
     'deploy:vendors',
     'deploy:assets:build',
     'deploy:cache:clear',
+    'deploy:redis:clear',
     'deploy:cache:warmup',
     'deploy:publish',
 ])->desc('Deploy');

@@ -6,7 +6,6 @@ namespace App\Manager;
 
 use App\Entity\FirstBatchEntry;
 use App\Entity\SecondBatchEntry;
-use App\Repository\FirstBatchEntryRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
@@ -22,7 +21,7 @@ class BatchEntryApiManager
     private const PAGE_SIZE = 15;
     private const FIRST_BATCH_CACHE_KEY = 'api_batch_entry:';
 
-    private FirstBatchEntryRepository $firstBatchEntryRepository;
+    private EntityManagerInterface $entityManager;
     private CacheManager $cacheManager;
     private KernelInterface $kernel;
 
@@ -43,7 +42,7 @@ class BatchEntryApiManager
     {
         $page = max($page, 1);
 
-        $cacheKey = base64_encode(self::FIRST_BATCH_CACHE_KEY . $page . $orderString . $searchString);
+        $cacheKey = base64_encode(self::FIRST_BATCH_CACHE_KEY . $batch . $page . $orderString . $searchString);
         $cacheClient = $this->cacheManager->getClient();
 
         $cacheData = null;
@@ -151,11 +150,11 @@ class BatchEntryApiManager
             ];
         }
 
+        $totalAmount = 0;
+
         try {
             $totalAmount = (int) $totalAmountQb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-        } catch (NonUniqueResultException $e) {
-            $totalAmount = 0;
+        } catch (NoResultException | NonUniqueResultException $e) {
         }
 
         return [
