@@ -19,11 +19,9 @@
 /.php_cs.cache
 ###< friendsofphp/php-cs-fixer ###
 
-###> other ###
+###> ide ###
 .idea
-/ansible/
-deploy.php
-###< other ###
+###< ide ###
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
