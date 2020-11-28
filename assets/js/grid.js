@@ -17,26 +17,21 @@ export const grid = new Grid({
     columns: [
         {
             name: 'BEDRIJFSNAAM',
-            width: '30%',
         },
         {
             name: 'VESTIGINGSPLAATS',
-            width: '15%',
         },
         {
             name: 'BEDRAG 1.0',
             formatter: (firstAmount) => moneyFormatter.format(firstAmount),
-            width: '10%',
         },
         {
             name: 'BEDRAG 2.0',
             formatter: (secondAmount) => moneyFormatter.format(secondAmount),
-            width: '10%',
         },
         {
             name: 'TOTAALBEDRAG',
             formatter: (totalAmount) => moneyFormatter.format(totalAmount),
-            width: '10%',
         },
     ],
     pagination: {
@@ -86,8 +81,7 @@ export const grid = new Grid({
         loading: 'Laden...',
         noRecordsFound: 'Geen toekenningen gevonden',
         error: 'Er is een fout opgetreden, probeer het opnieuw.',
-    },
-    autoWidth: false,
+    }
 });
 
 $(document).on('input', '.search-company, .search-place', debounce(() => {
