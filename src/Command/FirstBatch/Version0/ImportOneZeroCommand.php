@@ -70,7 +70,7 @@ class ImportOneZeroCommand extends Command
 
         $this->entityManager->flush();
 
-        $io->success('Finished importing batch one');
+        $io->success('Finished importing');
 
         return self::SUCCESS;
     }

@@ -71,7 +71,7 @@ class ImportOneOneCommand extends Command
 
         $this->entityManager->flush();
 
-        $io->success('Finished importing batch two');
+        $io->success('Finished importing');
 
         return self::SUCCESS;
     }
