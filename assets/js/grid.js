@@ -10,7 +10,14 @@ const handleApiData = (data) => {
 
     toggleGridTotals(true);
 
-    return data.data['result'].map((e) => [e['companyName'], e['placeName'], e['firstAmount'], e['secondAmount'], e['totalAmount']]);
+    return data.data['result'].map((e) => [
+        e['companyName'],
+        e['placeName'],
+        e['oneZeroAmount'],
+        e['oneOneAmount'],
+        e['twoZeroAmount'],
+        e['totalAmount']
+    ]);
 }
 
 export const grid = new Grid({
@@ -23,6 +30,10 @@ export const grid = new Grid({
         },
         {
             name: 'BEDRAG 1.0',
+            formatter: (firstAmount) => moneyFormatter.format(firstAmount),
+        },
+        {
+            name: 'BEDRAG 1.1 (1E CORRECTIE)',
             formatter: (firstAmount) => moneyFormatter.format(firstAmount),
         },
         {
@@ -52,7 +63,7 @@ export const grid = new Grid({
 
                 for (let col of columns) {
                     const dir = col.direction === 1 ? 'asc' : 'desc';
-                    let colName = ['companyName', 'placeName', 'firstAmount', 'secondAmount', 'totalAmount'][col.index];
+                    let colName = ['companyName', 'placeName', 'oneZeroAmount', 'oneOneAmount', 'twoZeroAmount', 'totalAmount'][col.index];
 
                     orderStrings.push(`${colName}:${dir}`);
                 }

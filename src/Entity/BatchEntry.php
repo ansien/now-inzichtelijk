@@ -11,9 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=BatchEntryRepository::class)
  * @ORM\Table(indexes={
  *     @ORM\Index(name="company_name_idx", columns={"company_name"}),
- *     @ORM\Index(name="first_amount_idx", columns={"first_amount"}),
- *     @ORM\Index(name="second_amount_idx", columns={"second_amount"}),
- *     @ORM\Index(name="total_amount_idx", columns={"total_amount"}),
+ *     @ORM\Index(name="one_zero_idx", columns={"one_zero_amount"}),
+ *     @ORM\Index(name="one_one_idx", columns={"one_one_amount"}),
+ *     @ORM\Index(name="two_zero_idx", columns={"two_zero_amount"}),
  * })
  */
 class BatchEntry
@@ -40,12 +40,16 @@ class BatchEntry
     /**
      * @ORM\Column(type="integer")
      */
-    private int $firstAmount;
+    private int $oneZeroAmount;
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private int $oneOneAmount;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private int $secondAmount;
+    private int $twoZeroAmount;
 
     /**
      * @ORM\Column(type="integer")
@@ -54,13 +58,14 @@ class BatchEntry
 
     // endregion
 
-    public function __construct(string $companyName, BatchEntryPlace $place, int $firstAmount, int $secondAmount, int $totalAmount)
+    public function __construct(string $companyName, BatchEntryPlace $place)
     {
         $this->companyName = $companyName;
         $this->place = $place;
-        $this->firstAmount = $firstAmount;
-        $this->secondAmount = $secondAmount;
-        $this->totalAmount = $totalAmount;
+        $this->oneZeroAmount = 0;
+        $this->oneOneAmount = 0;
+        $this->twoZeroAmount = 0;
+        $this->totalAmount = 0;
     }
 
     // region Getters
@@ -80,14 +85,19 @@ class BatchEntry
         return $this->place;
     }
 
-    public function getFirstAmount(): int
+    public function getOneZeroAmount(): int
     {
-        return $this->firstAmount;
+        return $this->oneZeroAmount;
     }
 
-    public function getSecondAmount(): int
+    public function getOneOneAmount(): int
     {
-        return $this->secondAmount;
+        return $this->oneOneAmount;
+    }
+
+    public function getTwoZeroAmount(): int
+    {
+        return $this->twoZeroAmount;
     }
 
     public function getTotalAmount(): int
@@ -99,23 +109,30 @@ class BatchEntry
 
     // region Setters
 
-    public function setFirstAmount(int $firstAmount): self
+    public function setOneZeroAmount(int $oneZeroAmount): self
     {
-        $this->firstAmount = $firstAmount;
+        $this->oneZeroAmount = $oneZeroAmount;
 
         return $this;
     }
 
-    public function setSecondAmount(int $secondAmount): self
+    public function setOneOneAmount(int $oneOneAmount): self
     {
-        $this->secondAmount = $secondAmount;
+        $this->oneOneAmount = $oneOneAmount;
 
         return $this;
     }
 
-    public function setTotalAmount(int $totalAmount): BatchEntry
+    public function setTwoZeroAmount(int $twoZeroAmount): self
     {
-        $this->totalAmount = $totalAmount;
+        $this->twoZeroAmount = $twoZeroAmount;
+
+        return $this;
+    }
+
+    public function recalculateTotalAmount(): self
+    {
+        $this->totalAmount = $this->oneOneAmount + $this->twoZeroAmount;
 
         return $this;
     }

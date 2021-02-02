@@ -132,6 +132,9 @@
             "./.php_cs.dist"
         ]
     },
+    "friendsofphp/proxy-manager-lts": {
+        "version": "v1.0.3"
+    },
     "geocoder-php/common-http": {
         "version": "4.3.0"
     },
@@ -519,6 +522,9 @@
     },
     "symfony/property-info": {
         "version": "v5.1.2"
+    },
+    "symfony/proxy-manager-bridge": {
+        "version": "v5.1.11"
     },
     "symfony/routing": {
         "version": "5.1",

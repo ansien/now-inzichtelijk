@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Manager;
 
+use App\Entity\BatchEntry;
 use App\Repository\BatchEntryRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -17,6 +18,14 @@ class BatchEntryApiManager
 {
     private const PAGE_SIZE = 15;
     private const CACHE_KEY = 'api_batch_entry:';
+    private const ALLOWED_ORDER_KEYS = [
+        'companyName' => 'be.companyName',
+        'placeName' => 'p.name',
+        'oneZeroAmount' => 'be.oneZeroAmount',
+        'oneOneAmount' => 'be.oneOneAmount',
+        'twoZeroAmount' => 'be.twoZeroAmount',
+        'totalAmount' => 'be.totalAmount',
+    ];
 
     private BatchEntryRepository $batchEntryRepository;
     private CacheManager $cacheManager;
@@ -110,41 +119,29 @@ class BatchEntryApiManager
                 return [];
             }
 
-            if (!empty($orderData)) {
-                if (array_key_exists('companyName', $orderData)) {
-                    $qb->addOrderBy('be.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('be.companyName', strtoupper($orderData['companyName']) === 'ASC' ? 'ASC' : 'DESC');
+            foreach ($orderData as $orderKey => $orderDirection) {
+                if (!array_key_exists($orderKey, self::ALLOWED_ORDER_KEYS)) {
+                    continue;
                 }
-                if (array_key_exists('placeName', $orderData)) {
-                    $qb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('p.name', strtoupper($orderData['placeName']) === 'ASC' ? 'ASC' : 'DESC');
-                }
-                if (array_key_exists('firstAmount', $orderData)) {
-                    $qb->addOrderBy('be.firstAmount', strtoupper($orderData['firstAmount']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('be.firstAmount', strtoupper($orderData['firstAmount']) === 'ASC' ? 'ASC' : 'DESC');
-                }
-                if (array_key_exists('secondAmount', $orderData)) {
-                    $qb->addOrderBy('be.secondAmount', strtoupper($orderData['secondAmount']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('be.secondAmount', strtoupper($orderData['secondAmount']) === 'ASC' ? 'ASC' : 'DESC');
-                }
-                if (array_key_exists('totalAmount', $orderData)) {
-                    $qb->addOrderBy('be.totalAmount', strtoupper($orderData['totalAmount']) === 'ASC' ? 'ASC' : 'DESC');
-                    $totalAmountQb->addOrderBy('be.totalAmount', strtoupper($orderData['totalAmount']) === 'ASC' ? 'ASC' : 'DESC');
-                }
+
+                $qb->addOrderBy(self::ALLOWED_ORDER_KEYS[$orderKey], strtoupper($orderDirection) === 'ASC' ? 'ASC' : 'DESC');
+                $totalAmountQb->addOrderBy(self::ALLOWED_ORDER_KEYS[$orderKey], strtoupper($orderDirection) === 'ASC' ? 'ASC' : 'DESC');
             }
         }
 
         $paginator = new Paginator($qb->getQuery(), $fetchJoinCollection = false);
         $result = [];
 
-        foreach ($paginator as $l) {
+        /** @var BatchEntry $e */
+        foreach ($paginator as $e) {
             $result[] = [
-                'id' => $l->getId(),
-                'companyName' => $l->getCompanyName(),
-                'placeName' => $l->getPlace()->getName(),
-                'firstAmount' => $l->getFirstAmount(),
-                'secondAmount' => $l->getSecondAmount(),
-                'totalAmount' => $l->getTotalAmount(),
+                'id' => $e->getId(),
+                'companyName' => $e->getCompanyName(),
+                'placeName' => $e->getPlace()->getName(),
+                'oneZeroAmount' => $e->getOneZeroAmount(),
+                'oneOneAmount' => $e->getOneOneAmount(),
+                'twoZeroAmount' => $e->getTwoZeroAmount(),
+                'totalAmount' => $e->getTotalAmount(),
             ];
         }
 

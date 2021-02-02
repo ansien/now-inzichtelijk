@@ -18,11 +18,14 @@
 
 # Handige commands
 ```sh
+# Converteer PDF naar TXT
+pdftotext -layout first-batch-1.pdf first-batch-1.txt
+
 # Converteer alle batches van TXT naar CSV
-php bin/console app:convert-first-batch && php bin/console app:convert-second-batch
+php bin/console app:convert-1.0 && php bin/console app:convert-2.0 && php bin/console app:convert-1.1
 
 # Drop de database en herimporteer de CSV bestanden
-php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-first-batch && php bin/console app:import-second-batch
+php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-1.0 && php bin/console app:import-2.0 && php bin/console app:import-1.1
 
 # Deploy
 ./vendor/bin/dep deploy production
