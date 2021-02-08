@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="one_zero_idx", columns={"one_zero_amount"}),
  *     @ORM\Index(name="one_one_idx", columns={"one_one_amount"}),
  *     @ORM\Index(name="two_zero_idx", columns={"two_zero_amount"}),
+ *     @ORM\Index(name="total_amount_idx", columns={"total_amount"}),
  * })
  */
 class BatchEntry
