@@ -24,6 +24,7 @@ class BatchEntryApiManager
         'oneZeroAmount' => 'be.oneZeroAmount',
         'oneOneAmount' => 'be.oneOneAmount',
         'twoZeroAmount' => 'be.twoZeroAmount',
+        'threeZeroAmount' => 'be.threeZeroAmount',
         'totalAmount' => 'be.totalAmount',
     ];
 
@@ -141,6 +142,7 @@ class BatchEntryApiManager
                 'oneZeroAmount' => $e->getOneZeroAmount(),
                 'oneOneAmount' => $e->getOneOneAmount(),
                 'twoZeroAmount' => $e->getTwoZeroAmount(),
+                'threeZeroAmount' => $e->getThreeZeroAmount(),
                 'totalAmount' => $e->getTotalAmount(),
             ];
         }

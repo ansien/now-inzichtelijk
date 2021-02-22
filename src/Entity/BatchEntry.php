@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="one_zero_idx", columns={"one_zero_amount"}),
  *     @ORM\Index(name="one_one_idx", columns={"one_one_amount"}),
  *     @ORM\Index(name="two_zero_idx", columns={"two_zero_amount"}),
+ *     @ORM\Index(name="three_zero_idx", columns={"three_zero_amount"}),
  *     @ORM\Index(name="total_amount_idx", columns={"total_amount"}),
  * })
  */
@@ -55,6 +56,11 @@ class BatchEntry
     /**
      * @ORM\Column(type="integer")
      */
+    private int $threeZeroAmount;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
     private int $totalAmount;
 
     // endregion
@@ -66,6 +72,7 @@ class BatchEntry
         $this->oneZeroAmount = 0;
         $this->oneOneAmount = 0;
         $this->twoZeroAmount = 0;
+        $this->threeZeroAmount = 0;
         $this->totalAmount = 0;
     }
 
@@ -101,6 +108,11 @@ class BatchEntry
         return $this->twoZeroAmount;
     }
 
+    public function getThreeZeroAmount(): int
+    {
+        return $this->threeZeroAmount;
+    }
+
     public function getTotalAmount(): int
     {
         return $this->totalAmount;
@@ -131,9 +143,16 @@ class BatchEntry
         return $this;
     }
 
+    public function setThreeZeroAmount(int $threeZeroAmount): self
+    {
+        $this->threeZeroAmount = $threeZeroAmount;
+
+        return $this;
+    }
+
     public function recalculateTotalAmount(): self
     {
-        $this->totalAmount = $this->oneOneAmount + $this->twoZeroAmount;
+        $this->totalAmount = $this->oneOneAmount + $this->twoZeroAmount + $this->threeZeroAmount;
 
         return $this;
     }
