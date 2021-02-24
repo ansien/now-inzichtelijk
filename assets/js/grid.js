@@ -16,6 +16,7 @@ const handleApiData = (data) => {
         e['oneZeroAmount'],
         e['oneOneAmount'],
         e['twoZeroAmount'],
+        e['threeZeroAmount'],
         e['totalAmount']
     ]);
 }
@@ -41,6 +42,10 @@ export const grid = new Grid({
             formatter: (secondAmount) => moneyFormatter.format(secondAmount),
         },
         {
+            name: 'BEDRAG 3.0',
+            formatter: (thirdAmount) => moneyFormatter.format(thirdAmount),
+        },
+        {
             name: 'TOTAALBEDRAG',
             formatter: (totalAmount) => moneyFormatter.format(totalAmount),
         },
@@ -63,7 +68,7 @@ export const grid = new Grid({
 
                 for (let col of columns) {
                     const dir = col.direction === 1 ? 'asc' : 'desc';
-                    let colName = ['companyName', 'placeName', 'oneZeroAmount', 'oneOneAmount', 'twoZeroAmount', 'totalAmount'][col.index];
+                    let colName = ['companyName', 'placeName', 'oneZeroAmount', 'oneOneAmount', 'twoZeroAmount', 'threeZeroAmount', 'totalAmount'][col.index];
 
                     orderStrings.push(`${colName}:${dir}`);
                 }

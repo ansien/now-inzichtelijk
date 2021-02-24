@@ -25,7 +25,7 @@ pdftotext -layout first-batch-1.pdf first-batch-1.txt
 php bin/console app:convert-1.0 && php bin/console app:convert-2.0 && php bin/console app:convert-1.1
 
 # Drop de database en herimporteer de CSV bestanden
-php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-1.0 && php bin/console app:import-2.0 && php bin/console app:import-1.1
+php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-1.0 && php bin/console app:import-2.0 && php bin/console app:import-1.1 && php bin/console app:import-3.0
 
 # Deploy
 ./vendor/bin/dep deploy production
