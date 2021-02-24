@@ -51,10 +51,12 @@ abstract class BaseImportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->entityManager->getConnection()->getConfiguration()->setSQLLogger(null);
+
         $io = new SymfonyStyle($input, $output);
-        $io->write('Reading [' . self::CSV_FILE . ']...');
-        $fileContent = file_get_contents(self::CSV_FILE);
-        $io->writeln(' done.');
+        $io->write('Reading [' . static::CSV_FILE . ']... ');
+        $fileContent = file_get_contents(static::CSV_FILE);
+        $io->writeln('done.');
 
         if (!$fileContent) {
             $io->error('Failed to open file');
@@ -67,7 +69,7 @@ abstract class BaseImportCommand extends Command
             CsvEncoder::DELIMITER_KEY => static::DELIMITER,
         ])]);
 
-        $io->write('Importing...');
+        $io->write('Importing... ');
         $csvContent = $serializer->decode($fileContent, 'csv');
         $total = count($csvContent);
         $io->writeln($total . ' entries.');
@@ -81,17 +83,19 @@ abstract class BaseImportCommand extends Command
             $this->findOrCreateEntry($companyName, $place, static::TARGET_VALUE, $amount);
 
             if ($i > 0 && $i % static::FLUSH_LIMIT === 0) {
-                $io->writeln("Flushing @ ${i} / ${total}...");
+                $io->write("Flushing @ ${i} / ${total}... ");
                 $this->flush();
+                $io->writeln('ok. ');
             }
 
             ++$i;
         }
 
-        $io->writeln("Flushing @ ${i} / ${total}");
+        $io->write("Flushing @ ${i} / ${total}... ");
         $this->flush();
+        $io->writeln('ok. ');
 
-        $io->success('Finished importing ' . static::CSV_FILE);
+        $io->success('Finished importing [' . static::CSV_FILE . ']');
 
         return self::SUCCESS;
     }
@@ -138,8 +142,8 @@ abstract class BaseImportCommand extends Command
 
     protected function findOrCreateEntry(string $companyName, BatchEntryPlace $place, $updateKey, int $updateValue): void
     {
-        $entryIndex = md5($companyName . $place->getName());
-        $callSetter = 'set' . $updateKey;
+        $entryIndex = $companyName . $place->getName();
+        $callSetter = 'add' . $updateKey; // csv can contain multiple entries hence we add & not set
         // First find in local cache
         if (array_key_exists($entryIndex, $this->entries)) {
             $this->entries[$entryIndex]->$callSetter($updateValue);
@@ -166,7 +170,7 @@ abstract class BaseImportCommand extends Command
             return;
         }
 
-        // Otheriwse, add amount to existing entry
+        // Otheriwse, set amount on existing entry
         $existingEntries[0]->$callSetter($updateValue);
         $existingEntries[0]->recalculateTotalAmount();
         $this->entries[$entryIndex] = $existingEntries[0];
