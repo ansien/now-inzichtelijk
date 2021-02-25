@@ -122,30 +122,30 @@ class BatchEntry
 
     // region Setters
 
-    public function setOneZeroAmount(int $oneZeroAmount): self
+    public function addOneZeroAmount(int $oneZeroAmount): self
     {
-        $this->oneZeroAmount = $oneZeroAmount;
+        $this->oneZeroAmount += $oneZeroAmount;
 
         return $this;
     }
 
-    public function setOneOneAmount(int $oneOneAmount): self
+    public function addOneOneAmount(int $oneOneAmount): self
     {
-        $this->oneOneAmount = $oneOneAmount;
+        $this->oneOneAmount += $oneOneAmount;
 
         return $this;
     }
 
-    public function setTwoZeroAmount(int $twoZeroAmount): self
+    public function addTwoZeroAmount(int $twoZeroAmount): self
     {
-        $this->twoZeroAmount = $twoZeroAmount;
+        $this->twoZeroAmount += $twoZeroAmount;
 
         return $this;
     }
 
-    public function setThreeZeroAmount(int $threeZeroAmount): self
+    public function addThreeZeroAmount(int $threeZeroAmount): self
     {
-        $this->threeZeroAmount = $threeZeroAmount;
+        $this->threeZeroAmount += $threeZeroAmount;
 
         return $this;
     }
