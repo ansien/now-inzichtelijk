@@ -19,19 +19,14 @@ set('clear_paths', [
     './README.md',
     './.gitignore',
     './.git',
-    './.php_cs',
     './.env',
-    './.eslintrc',
+    '/ansible',
     '/assets',
     '/tests',
-    './package.json',
-    './package-lock.json',
     './symfony.lock',
-    './webpack.config.js',
     './phpunit.xml',
     './phpunit.xml.dist',
     './deploy.php',
-    './psalm.xml',
     './composer.phar',
     './composer.lock',
 ]);
@@ -39,33 +34,31 @@ set('clear_paths', [
 set('default_stage', 'production');
 set('http_user', 'www-data');
 
+// Tasks
+set('bin/yarn', function (): string {
+    return run('which yarn');
+});
+
+desc('Build assets on server');
+task('deploy:assets:build', function () {
+    run('cd {{release_path}} && {{bin/yarn}} install && {{bin/yarn}} encore production');
+});
+
 // Servers
-host('production')
+host('prod')
     ->setHostname('now-inzichtelijk.nl')
     ->setRemoteUser('deploy')
     ->set('branch', 'master')
     ->setForwardAgent(true)
     ->set('deploy_path', '/home/deploy/now-inzichtelijk.nl');
 
-set('bin/yarn', function () {
-    return (string) run('which yarn');
-});
-desc('Build assets on server');
-task('deploy:assets:build', function () {
-    run('cd {{release_path}} && {{bin/yarn}} install && {{bin/yarn}} encore production');
-});
-
-desc('Clean redis');
-task('deploy:redis:clear', static function () {
-    run('redis-cli FLUSHALL');
-});
-
+desc('Deploy project');
 task('deploy', [
     'deploy:prepare',
     'deploy:vendors',
     'deploy:assets:build',
+    'database:migrate',
     'deploy:cache:clear',
-    'deploy:redis:clear',
     'deploy:cache:warmup',
     'deploy:publish',
-])->desc('Deploy');
+]);

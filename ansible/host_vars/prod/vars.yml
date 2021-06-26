@@ -1,0 +1,36 @@
+remote_sudo_user: ansien
+remote_web_user: deploy
+remote_web_user_password: "{{ vault.remote_web_user.password }}"
+web_user_ssh_public_key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+deployer:
+  directory: now-inzichtelijk.nl
+
+php:
+  version: 8.0
+
+certbot:
+  email: "{{ vault.certbot.email }}"
+
+domain:
+  name: now-inzichtelijk.nl
+
+mariadb:
+  version: 10.5.9
+  gpg_key: "0xF1656F24C74CD1D8"
+  repository: "deb [arch=amd64,arm64,ppc64el] http://ams2.mirrors.digitalocean.com/mariadb/repo/10.5/debian buster main"
+  users:
+    root:
+      user: "root"
+      password: "{{ vault.database.root_password }}"
+      priv: "*.*:ALL,GRANT"
+    symfony:
+      user: "symfony"
+      password: "{{ vault.database.application_password }}"
+      priv: "now-inzichtelijk.*:ALL,GRANT"
+
+  databases:
+    - now-inzichtelijk
+
+  application_user: symfony
+  application_database: now-inzichtelijk

@@ -7,7 +7,7 @@ namespace App\Manager;
 use RedisClient\ClientFactory;
 use RedisClient\RedisClient;
 
-class CacheManager
+final class CacheManager
 {
     private $redisClient;
 

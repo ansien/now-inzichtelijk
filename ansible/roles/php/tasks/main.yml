@@ -1,0 +1,63 @@
+---
+- name: Add Ondrej Sury's apt key
+  apt_key:
+    url: https://packages.sury.org/php/apt.gpg
+    id: 15058500A0235D97F5D10063B188E2B695BD4743
+    state: present
+
+- name: Add ondrej/php PPA
+  apt_repository:
+    repo: 'ppa:ondrej/php'
+    state: present
+    update_cache: yes
+
+- name: Install PHP and extensions
+  apt:
+    pkg:
+      - php{{ php.version }}
+      - php{{ php.version }}-cli
+      - php{{ php.version }}-common
+      - php{{ php.version }}-curl
+      - php{{ php.version }}-dev
+      - php{{ php.version }}-fpm
+      - php{{ php.version }}-gd
+      - php{{ php.version }}-mbstring
+      - php{{ php.version }}-mysql
+      - php{{ php.version }}-opcache
+      - php{{ php.version }}-xml
+      - php{{ php.version }}-xmlrpc
+      - php{{ php.version }}-zip
+    state: present
+    update_cache: yes
+
+- name: Set PHP user
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/pool.d/www.conf
+    regexp: "^user"
+    line: "user = {{ remote_web_user }}"
+    state: present
+  notify: restart php-fpm
+
+- name: Set PHP group
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/pool.d/www.conf
+    regexp: "^group"
+    line: "group = {{ remote_web_user }}"
+    state: present
+  notify: restart php-fpm
+
+- name: Set PHP listen owner
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/pool.d/www.conf
+    regexp: "^listen\\.owner"
+    line: "listen.owner = {{ remote_web_user }}"
+    state: present
+  notify: restart php-fpm
+
+- name: Set PHP listen group
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/pool.d/www.conf
+    regexp: "^listen\\.group"
+    line: "listen.group = {{ remote_web_user }}"
+    state: present
+  notify: restart php-fpm

@@ -1,0 +1,42 @@
+---
+
+- name: Install
+  apt:
+    name: mariadb-server
+    state: present
+    update_cache: true
+
+- name: Install Python MySQL bindings
+  apt:
+    name: python3-mysqldb
+    state: present
+    update_cache: true
+
+- name: Remove anonymous user account for localhost
+  mysql_user:
+    name: ''
+    host: localhost
+    state: absent
+  no_log: true
+
+- name: Remove all anonymous accounts
+  mysql_user:
+    name: ''
+    host_all: yes
+    state: absent
+  no_log: true
+
+- name: Create users
+  mysql_user:
+    name: "{{ item.value.user }}"
+    password: "{{ item.value.password }}"
+    priv:  "{{ item.value.priv }}"
+    login_user: "{{ mariadb.users.root.user }}"
+    update_password: "on_create"
+  with_dict: "{{ mariadb.users }}"
+  no_log: true
+
+- name: Create database
+  mysql_db:
+    name: "{{ mariadb.application_database }}"
+    login_user: "{{ mariadb.users.root.user }}"

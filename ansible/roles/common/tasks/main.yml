@@ -1,0 +1,20 @@
+---
+
+- name: Update and upgrade packages
+  become: true
+  apt:
+    upgrade: dist
+    update_cache: yes
+
+- name: Install packages
+  apt:
+    name:
+      - software-properties-common
+      - git-core
+      - letsencrypt
+      - unzip
+      - acl
+      - python-dev
+      - gnupg2
+    state: latest
+    update_cache: true

@@ -10,10 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class HomeController extends AbstractController
 {
-    /**
-     * @Route("/", name="home")
-     */
-    public function handleRequest(): Response
+    #[Route('/', name: 'home')]
+    public function index(): Response
     {
         return $this->render('home.html.twig');
     }

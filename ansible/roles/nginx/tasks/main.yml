@@ -1,0 +1,20 @@
+---
+
+- name: Install
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Set Nginx user
+  lineinfile:
+    dest: /etc/nginx/nginx.conf
+    regexp: "^user"
+    line: "user {{ remote_web_user }};"
+    state: present
+  notify: restart nginx
+
+- name: Remove default config
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent

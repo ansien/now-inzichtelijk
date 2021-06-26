@@ -1,14 +1,16 @@
 import $ from 'jquery';
 
-export const debounce = (func, delay) => {
-    let inDebounce;
-    return () => {
+export const debounce = (func, wait) => {
+    let timeout;
+    return function(...args) {
         const context = this;
-        const args = arguments;
-        clearTimeout(inDebounce);
-        inDebounce = setTimeout(() => func.apply(context, args), delay);
-    }
-}
+        if (timeout) clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            timeout = null;
+            func.apply(context, args);
+        }, wait);
+    };
+};
 
 export const toggleGridTotals = (show) => {
     if (show) {

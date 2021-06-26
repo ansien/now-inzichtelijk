@@ -1,0 +1,8 @@
+---
+
+- name: Create .env.local file from template
+  template:
+    src: ".env"
+    dest: "/home/deploy/{{ deployer.directory }}/shared/.env.local"
+    owner: "deploy"
+    group: "deploy"

@@ -1,0 +1,14 @@
+---
+
+- name: Copy host configs
+  template:
+    src: "nginx.conf"
+    dest: "/etc/nginx/sites-available/{{ domain.name }}.conf"
+  notify: reload nginx
+
+- name: Activate hosts
+  file:
+    src: "/etc/nginx/sites-available/{{ domain.name }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ domain.name }}.conf"
+    state: link
+  notify: restart nginx

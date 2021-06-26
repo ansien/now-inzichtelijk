@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\Manager;
 
-use App\Entity\BatchEntry;
-use App\Repository\BatchEntryRepository;
+use App\Repository\EntryRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -14,32 +13,28 @@ use InvalidArgumentException;
 use JsonException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class BatchEntryApiManager
+final class BatchEntryApiManager
 {
     private const PAGE_SIZE = 15;
     private const CACHE_KEY = 'api_batch_entry:';
     private const ALLOWED_ORDER_KEYS = [
-        'companyName' => 'be.companyName',
-        'placeName' => 'p.name',
-        'oneZeroAmount' => 'be.oneZeroAmount',
-        'oneOneAmount' => 'be.oneOneAmount',
-        'twoZeroAmount' => 'be.twoZeroAmount',
-        'threeZeroAmount' => 'be.threeZeroAmount',
-        'totalAmount' => 'be.totalAmount',
+        'companyName' => 'c.companyName',
+        'placeName' => 'c.placeName',
+        'amount' => 'amountSum',
     ];
 
-    private BatchEntryRepository $batchEntryRepository;
     private CacheManager $cacheManager;
     private KernelInterface $kernel;
+    private EntryRepository $entryRepository;
 
     public function __construct(
-        BatchEntryRepository $batchEntryRepository,
         CacheManager $cacheManager,
-        KernelInterface $kernel
+        KernelInterface $kernel,
+        EntryRepository $entryRepository
     ) {
-        $this->batchEntryRepository = $batchEntryRepository;
         $this->cacheManager = $cacheManager;
         $this->kernel = $kernel;
+        $this->entryRepository = $entryRepository;
     }
 
     /**
@@ -57,7 +52,7 @@ class BatchEntryApiManager
 
         try {
             $cacheData = $cacheClient->get($cacheKey);
-        } catch (Exception $e) {
+        } catch (Exception) {
             $cacheFailed = true;
         }
 
@@ -85,30 +80,32 @@ class BatchEntryApiManager
 
     private function getBatchEntriesFromDatabase(int $page, ?string $orderString, ?string $searchString): array
     {
-        $qb = $this->batchEntryRepository->createQueryBuilder('be')
-            ->join('be.place', 'p')
+        $qb = $this->entryRepository->createQueryBuilder('e')
+            ->addSelect('SUM(e.amount) as amountSum')
+            ->join('e.company', 'c')
+            ->groupBy('c.id')
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
-        $totalAmountQb = $this->batchEntryRepository->createQueryBuilder('be')
-            ->select('SUM(be.totalAmount)')
-            ->join('be.place', 'p');
+        $totalAmountQb = $this->entryRepository->createQueryBuilder('e')
+            ->select('SUM(e.amount) as amountSum')
+            ->join('e.company', 'c');
 
         if ($searchString) {
             try {
                 $searchData = $this->parseQueryString($searchString);
-            } catch (Exception $e) {
+            } catch (Exception) {
                 return [];
             }
 
             if (!empty($searchData)) {
                 if (array_key_exists('companyName', $searchData)) {
-                    $qb->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
-                    $totalAmountQb->andWhere('be.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
+                    $qb->andWhere('c.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
+                    $totalAmountQb->andWhere('c.companyName LIKE :companyName')->setParameter('companyName', '%' . strtoupper($searchData['companyName']) . '%');
                 }
                 if (array_key_exists('placeName', $searchData)) {
-                    $qb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
-                    $totalAmountQb->andWhere('p.name LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
+                    $qb->andWhere('c.placeName LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
+                    $totalAmountQb->andWhere('c.placeName LIKE :placeName')->setParameter('placeName', '%' . strtoupper($searchData['placeName']) . '%');
                 }
             }
         }
@@ -116,7 +113,7 @@ class BatchEntryApiManager
         if ($orderString) {
             try {
                 $orderData = $this->parseQueryString($orderString);
-            } catch (Exception $e) {
+            } catch (Exception) {
                 return [];
             }
 
@@ -130,20 +127,15 @@ class BatchEntryApiManager
             }
         }
 
-        $paginator = new Paginator($qb->getQuery(), $fetchJoinCollection = false);
+        $paginator = new Paginator($qb->getQuery(), false);
         $result = [];
 
-        /** @var BatchEntry $e */
         foreach ($paginator as $e) {
             $result[] = [
-                'id' => $e->getId(),
-                'companyName' => $e->getCompanyName(),
-                'placeName' => $e->getPlace()->getName(),
-                'oneZeroAmount' => $e->getOneZeroAmount(),
-                'oneOneAmount' => $e->getOneOneAmount(),
-                'twoZeroAmount' => $e->getTwoZeroAmount(),
-                'threeZeroAmount' => $e->getThreeZeroAmount(),
-                'totalAmount' => $e->getTotalAmount(),
+                'id' => $e[0]->getId(),
+                'companyName' => $e[0]->getCompany()->getCompanyName(),
+                'placeName' => !empty($e[0]->getCompany()->getPlaceName()) ? $e[0]->getCompany()->getPlaceName() : '-',
+                'amount' => $e['amountSum'],
             ];
         }
 
@@ -151,7 +143,7 @@ class BatchEntryApiManager
 
         try {
             $totalAmount = (int) $totalAmountQb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException | NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException) {
         }
 
         return [

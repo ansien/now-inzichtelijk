@@ -1,0 +1,8 @@
+parameters:
+    level: 6 # 0 - loose, 8 - strict
+    symfony:
+        container_xml_path: var/cache/dev/App_KernelDevDebugContainer.xml
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
+    paths:
+        - src

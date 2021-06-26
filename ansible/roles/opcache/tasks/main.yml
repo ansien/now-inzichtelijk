@@ -1,0 +1,85 @@
+---
+
+- name: Enable
+  shell: phpenmod opcache
+  changed_when: false
+
+# opcache.enable
+- name: Set opcache.enable in php.ini for CLI
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/cli/php.ini
+    regexp: "opcache.enable="
+    line: "opcache.enable=1"
+
+- name: Set opcache.enable in php.ini for FPM
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/php.ini
+    regexp: "opcache.enable="
+    line: "opcache.enable=1"
+  notify: restart nginx
+
+# opcache.enable_cli
+- name: Set opcache.enable_cli in php.ini for CLI
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/cli/php.ini
+    regexp: "opcache.enable_cli="
+    line: "opcache.enable_cli=1"
+
+- name: Set opcache.enable in php.ini for FPM
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/php.ini
+    regexp: "opcache.enable_cli="
+    line: "opcache.enable_cli=1"
+  notify: restart nginx
+
+# opcache.memory_consumption
+- name: Set opcache.memory_consumption in php.ini for CLI
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/cli/php.ini
+    regexp: "opcache.memory_consumption="
+    line: "opcache.memory_consumption=256"
+
+- name: Set opcache.memory_consumption in php.ini for FPM
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/php.ini
+    regexp: "opcache.memory_consumption="
+    line: "opcache.memory_consumption=256"
+  notify: restart nginx
+
+# opcache.max_accelerated_files
+- name: Set opcache.max_accelerated_files in php.ini for CLI
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/cli/php.ini
+    regexp: "opcache.max_accelerated_files="
+    line: "opcache.max_accelerated_files=20000"
+
+- name: Set opcache.max_accelerated_files in php.ini for FPM
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/php.ini
+    regexp: "opcache.max_accelerated_files="
+    line: "opcache.max_accelerated_files=20000"
+  notify: restart nginx
+
+# opcache.validate_timestamps
+- name: Set opcache.validate_timestamps in php.ini for CLI
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/cli/php.ini
+    regexp: "opcache.validate_timestamps="
+    line: "opcache.validate_timestamps=0"
+
+- name: Set opcache.validate_timestamps in php.ini for FPM
+  become: true
+  lineinfile:
+    dest: /etc/php/{{ php.version }}/fpm/php.ini
+    regexp: "opcache.validate_timestamps="
+    line: "opcache.validate_timestamps=0"
+  notify: restart nginx

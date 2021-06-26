@@ -1,0 +1,39 @@
+---
+
+- name: Create deploy group
+  user:
+    name: deploy
+
+- name: Create deploy user
+  user:
+    name: deploy
+    generate_ssh_key: true
+    comment: "Deploy user"
+    uid: 1040
+    groups: ["deploy", "www-data"]
+    shell: /bin/bash
+
+- name: Set authorized SSH key for deploy user
+  authorized_key:
+    user: deploy
+    state: present
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+- name: Give deploy user sudo permissions for certain commands
+  lineinfile:
+    dest: /etc/sudoers
+    line: "{{ item.line }}"
+  with_items:
+    - { line: 'deploy ALL=NOPASSWD:/usr/sbin/service php{{ php.version }}-fpm restart' }
+    - { line: 'deploy ALL=NOPASSWD:/usr/sbin/service supervisor reload' }
+    - { line: 'deploy ALL=NOPASSWD:/bin/chmod' }
+    - { line: 'deploy ALL=NOPASSWD:/bin/mkdir' }
+    - { line: 'deploy ALL=NOPASSWD:/bin/setfacl' }
+
+- name: Create shared deploy directory
+  file:
+    path: "/home/deploy/{{ deployer.directory }}/shared"
+    state: directory
+    owner: "deploy"
+    group: "deploy"
+    mode: 0755

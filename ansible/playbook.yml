@@ -1,0 +1,44 @@
+---
+
+- hosts: all
+  remote_user: "{{ remote_sudo_user }}"
+  become: true
+  roles:
+    - role: common
+      tags: [common]
+
+    - role: ssh
+      tags: [ssh]
+
+    - role: deployer
+      tags: [deployer]
+
+    - role: certbot
+      tags: [certbot]
+
+    - role: nginx
+      tags: [nginx]
+
+    - role: nginx-sites
+      tags: [nginx-sites]
+
+    - role: php
+      tags: [php]
+
+    - role: opcache
+      tags: [opcache]
+
+    - role: mariadb
+      tags: [mariadb]
+
+    - role: redis
+      tags: [ redis ]
+
+    - role: dotenv
+      tags: [dotenv]
+
+    - role: node
+      tags: [ node ]
+
+    - role: yarn
+      tags: [ yarn ]

@@ -1,0 +1,19 @@
+---
+
+- name: Download and install the certbot-nginx plugin
+  apt:
+    name: python3-certbot-nginx
+    state: present
+    update_cache: true
+
+- name: Request LetsEncrypt certificates
+  command: "certbot --nginx certonly --non-interactive --agree-tos --email {{ certbot.email }} --domains {{ domain.name }}"
+  changed_when: false
+
+- name: Add certbot renew cron to crontab
+  cron:
+    name: "Certbot renew"
+    special_time: "hourly"
+    job: "python -c 'import random; import time; time.sleep(random.random() * 3600)' && certbot renew"
+    user: "{{ remote_web_user }}"
+    state: present

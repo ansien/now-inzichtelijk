@@ -2,7 +2,7 @@ import $ from 'jquery';
 import { Grid } from 'gridjs';
 import { debounce, moneyFormatter, toggleGridTotals } from './utils';
 
-const GRID_API_URL = '/api/v1/batch-entry';
+const GRID_API_URL = '/api/v1/data';
 
 const handleApiData = (data) => {
     $('.grid-total').text(moneyFormatter.format(data.data['totalAmount']));
@@ -13,11 +13,7 @@ const handleApiData = (data) => {
     return data.data['result'].map((e) => [
         e['companyName'],
         e['placeName'],
-        e['oneZeroAmount'],
-        e['oneOneAmount'],
-        e['twoZeroAmount'],
-        e['threeZeroAmount'],
-        e['totalAmount']
+        e['amount'],
     ]);
 }
 
@@ -30,24 +26,8 @@ export const grid = new Grid({
             name: 'VESTIGINGSPLAATS',
         },
         {
-            name: 'BEDRAG 1.0',
-            formatter: (firstAmount) => moneyFormatter.format(firstAmount),
-        },
-        {
-            name: 'BEDRAG 1.1 (1E CORRECTIE)',
-            formatter: (firstAmount) => moneyFormatter.format(firstAmount),
-        },
-        {
-            name: 'BEDRAG 2.0',
-            formatter: (secondAmount) => moneyFormatter.format(secondAmount),
-        },
-        {
-            name: 'BEDRAG 3.0',
-            formatter: (thirdAmount) => moneyFormatter.format(thirdAmount),
-        },
-        {
             name: 'TOTAALBEDRAG',
-            formatter: (totalAmount) => moneyFormatter.format(totalAmount),
+            formatter: (amount) => moneyFormatter.format(amount),
         },
     ],
     pagination: {
@@ -63,12 +43,12 @@ export const grid = new Grid({
                 let orderStrings = [];
 
                 if (!columns.length) {
-                    orderStrings.push('totalAmount:desc');
+                    orderStrings.push('amount:desc');
                 }
 
                 for (let col of columns) {
                     const dir = col.direction === 1 ? 'asc' : 'desc';
-                    let colName = ['companyName', 'placeName', 'oneZeroAmount', 'oneOneAmount', 'twoZeroAmount', 'threeZeroAmount', 'totalAmount'][col.index];
+                    let colName = ['companyName', 'placeName', 'amount'][col.index];
 
                     orderStrings.push(`${colName}:${dir}`);
                 }
