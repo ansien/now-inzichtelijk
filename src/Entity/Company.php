@@ -31,6 +31,7 @@ class Company
      * @var Collection<Entry>
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Entry", mappedBy="company")
+     * @ORM\OrderBy({"batch" = "ASC"})
      */
     private Collection $entries;
 
@@ -64,7 +65,7 @@ class Company
     /**
      * @return Collection<Entry>
      */
-    public function getEntries()
+    public function getEntries(): Collection
     {
         return $this->entries;
     }

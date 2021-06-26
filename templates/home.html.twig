@@ -1,6 +1,23 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="nowi-modal modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body nowi-modal__body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Sluiten</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="nowi container">
 
         <nav class="nowi-title navbar navbar-expand-lg navbar-light bg-light rounded mt-4">
@@ -14,6 +31,13 @@
                 Naar welke bedrijven is deze subsidie toegegaan?
                 Na afloop van alle aanvraagperiodes en de definitieve berekening zal hier het verschil in subsidie getoond worden en zal het dus inzichtelijk worden welke bedrijven potentieel misbruik hebben gemaakt van deze regeling.
             </p>
+        </div>
+
+        <div class="nowi-promo card text-white bg-primary">
+            <div class="nowi-promo__body card-body">
+                Op zoek naar een ervaren freelance web/software ontwikkelaar?<br>
+                <small class="nowi-promo--contact"><a href="mailto:hello@andries.io?subject=Mail vanaf now-inzichtelijk.nl">Stuur me een e-mail (hello@andries.io)</a></small>
+            </div>
         </div>
 
         <hr>

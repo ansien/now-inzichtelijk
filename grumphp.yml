@@ -23,11 +23,13 @@ grumphp:
                 - 'ini_set'
                 - 'error_reporting'
                 - 'set_time_limit'
-        ecs:
-            config: ~
-            level: ~
-            paths: []
-            files_on_pre_commit: false
+        phpcsfixer2:
+            allow_risky: false
+            cache_file: ~
+            config: .php-cs-fixer.dist.php
+            rules: []
+            using_cache: ~
+            config_contains_finder: false
+            verbose: true
+            diff: false
             triggered_by: ['php']
-            clear-cache: false
-            no-progress-bar: true

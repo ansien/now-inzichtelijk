@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import { Grid } from 'gridjs';
+import { Grid, html } from 'gridjs';
 import { debounce, moneyFormatter, toggleGridTotals } from './utils';
 
 const GRID_API_URL = '/api/v1/data';
@@ -11,6 +11,7 @@ const handleApiData = (data) => {
     toggleGridTotals(true);
 
     return data.data['result'].map((e) => [
+        e['companyId'],
         e['companyName'],
         e['placeName'],
         e['amount'],
@@ -20,6 +21,10 @@ const handleApiData = (data) => {
 export const grid = new Grid({
     columns: [
         {
+            name: 'companyId',
+            hidden: true,
+        },
+        {
             name: 'BEDRIJFSNAAM',
         },
         {
@@ -27,7 +32,9 @@ export const grid = new Grid({
         },
         {
             name: 'TOTAALBEDRAG',
-            formatter: (amount) => moneyFormatter.format(amount),
+            formatter: (amount, r, d) => {
+                return html(`<a href='javascript:void(0)' class='nowi-modal-toggle' data-company-id='${r._cells[0].data}'>${moneyFormatter.format(amount)}</a>`);
+            }
         },
     ],
     pagination: {

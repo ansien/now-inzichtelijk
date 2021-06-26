@@ -1,0 +1,16 @@
+<table class="table">
+    <thead>
+    <tr style="border-top: none;">
+        <th scope="col" style="border-top: none;">Versie</th>
+        <th scope="col" style="border-top: none;">Bedrag</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for entry in entries %}
+        <tr>
+            <th scope="row">{{ 'NOW ' ~ entry.batch }}</th>
+            <td>{{ entry.amount|format_currency('EUR', { fraction_digit: 0 }) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

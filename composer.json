@@ -14,12 +14,8 @@
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.9",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "phpdocumentor/reflection-docblock": "^5.2",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan": "^0.12.90",
-        "phpstan/phpstan-doctrine": "^0.12.39",
-        "phpstan/phpstan-strict-rules": "^0.12.9",
-        "phpstan/phpstan-symfony": "^0.12.37",
         "sensio/framework-extra-bundle": "^6.1",
         "symfony/asset": "5.3.*",
         "symfony/console": "5.3.*",
@@ -49,6 +45,7 @@
         "symfony/webpack-encore-bundle": "^1.12",
         "symfony/yaml": "5.3.*",
         "twig/extra-bundle": "^2.12|^3.0",
+        "twig/intl-extra": "^3.3",
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
@@ -63,8 +60,7 @@
         "symfony/phpunit-bridge": "^5.3",
         "symfony/stopwatch": "^5.3",
         "symfony/var-dumper": "^5.3",
-        "symfony/web-profiler-bundle": "^5.3",
-        "symplify/easy-coding-standard": "^9.3"
+        "symfony/web-profiler-bundle": "^5.3"
     },
     "config": {
         "optimize-autoloader": true,

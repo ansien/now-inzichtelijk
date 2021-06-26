@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Manager;
 
+use App\Entity\Company;
 use App\Repository\EntryRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -16,7 +17,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
 final class BatchEntryApiManager
 {
     private const PAGE_SIZE = 15;
+
     private const CACHE_KEY = 'api_batch_entry:';
+
     private const ALLOWED_ORDER_KEYS = [
         'companyName' => 'c.companyName',
         'placeName' => 'c.placeName',
@@ -24,7 +27,9 @@ final class BatchEntryApiManager
     ];
 
     private CacheManager $cacheManager;
+
     private KernelInterface $kernel;
+
     private EntryRepository $entryRepository;
 
     public function __construct(
@@ -133,6 +138,7 @@ final class BatchEntryApiManager
         foreach ($paginator as $e) {
             $result[] = [
                 'id' => $e[0]->getId(),
+                'companyId' => $e[0]->getCompany()->getId(),
                 'companyName' => $e[0]->getCompany()->getCompanyName(),
                 'placeName' => !empty($e[0]->getCompany()->getPlaceName()) ? $e[0]->getCompany()->getPlaceName() : '-',
                 'amount' => $e['amountSum'],
@@ -165,5 +171,19 @@ final class BatchEntryApiManager
         }
 
         return $data;
+    }
+
+    public function getEntriesForCompany(Company $company): array
+    {
+        $result = [];
+
+        foreach ($company->getEntries() as $entry) {
+            $result[] = [
+                'batch' => $entry->getBatch(),
+                'amount' => $entry->getAmount(),
+            ];
+        }
+
+        return $result;
     }
 }
