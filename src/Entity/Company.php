@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="place_name_idx", columns={"place_name"}),
  * })
  */
-final class Company
+class Company
 {
     // region Properties
 

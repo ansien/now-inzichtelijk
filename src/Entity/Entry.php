@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="amount_idx", columns={"amount"}),
  * })
  */
-final class Entry
+class Entry
 {
     // region Properties
 
