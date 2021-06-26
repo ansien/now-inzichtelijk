@@ -15,6 +15,9 @@ dom.watch();
 
 $(document).on('click', '.nowi-modal-toggle', function () {
     const companyId = $(this).data('company-id');
-    $('.nowi-modal__body').load(`/company/${companyId}/detail-modal`);
-    $('.nowi-modal').modal('show');
+    if (!companyId) return;
+
+    $('.nowi-modal__content').load(`/company/${companyId}/detail-modal`, function() {
+        $('.nowi-modal').modal('show');
+    });
 })

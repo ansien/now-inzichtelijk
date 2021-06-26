@@ -26,6 +26,7 @@ final class DetailModalController extends AbstractController
 
         return $this->render('detail-modal.html.twig', [
             'entries' => $entryData,
+            'company' => $company,
         ]);
     }
 }
