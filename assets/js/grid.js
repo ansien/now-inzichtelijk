@@ -55,7 +55,7 @@ export const grid = new Grid({
 
                 for (let col of columns) {
                     const dir = col.direction === 1 ? 'asc' : 'desc';
-                    let colName = ['companyName', 'placeName', 'amount'][col.index];
+                    let colName = ['companyName', 'placeName', 'amount'][col.index - 1];
 
                     orderStrings.push(`${colName}:${dir}`);
                 }
