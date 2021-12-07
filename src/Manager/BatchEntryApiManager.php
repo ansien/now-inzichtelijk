@@ -43,7 +43,7 @@ final class BatchEntryApiManager
     }
 
     /**
-     * @throws JsonException | InvalidArgumentException
+     * @throws JsonException|InvalidArgumentException
      */
     public function getBatchEntries(int $page, ?string $orderString, ?string $searchString): array
     {
@@ -88,7 +88,7 @@ final class BatchEntryApiManager
         $qb = $this->entryRepository->createQueryBuilder('e')
             ->addSelect('SUM(e.amount) as amountSum')
             ->join('e.company', 'c')
-            ->groupBy('c.id')
+            ->groupBy('c.id, e.id')
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
@@ -149,7 +149,7 @@ final class BatchEntryApiManager
 
         try {
             $totalAmount = (int) $totalAmountQb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException | NonUniqueResultException) {
+        } catch (NoResultException|NonUniqueResultException) {
         }
 
         return [
