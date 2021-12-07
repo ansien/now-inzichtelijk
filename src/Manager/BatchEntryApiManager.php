@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Manager;
 
 use App\Entity\Company;
+use App\Repository\CompanyRepository;
 use App\Repository\EntryRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -32,14 +33,18 @@ final class BatchEntryApiManager
 
     private EntryRepository $entryRepository;
 
+    private CompanyRepository $companyRepository;
+
     public function __construct(
         CacheManager $cacheManager,
         KernelInterface $kernel,
-        EntryRepository $entryRepository
+        EntryRepository $entryRepository,
+        CompanyRepository $companyRepository
     ) {
         $this->cacheManager = $cacheManager;
         $this->kernel = $kernel;
         $this->entryRepository = $entryRepository;
+        $this->companyRepository = $companyRepository;
     }
 
     /**
@@ -85,10 +90,10 @@ final class BatchEntryApiManager
 
     private function getBatchEntriesFromDatabase(int $page, ?string $orderString, ?string $searchString): array
     {
-        $qb = $this->entryRepository->createQueryBuilder('e')
-            ->addSelect('SUM(e.amount) as amountSum')
-            ->join('e.company', 'c')
-            ->groupBy('c.id, e.id')
+        $qb = $this->companyRepository->createQueryBuilder('c')
+            ->select('c as company, SUM(e.amount) as amountSum')
+            ->join('c.entries', 'e')
+            ->groupBy('e.company')
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
@@ -137,10 +142,9 @@ final class BatchEntryApiManager
 
         foreach ($paginator as $e) {
             $result[] = [
-                'id' => $e[0]->getId(),
-                'companyId' => $e[0]->getCompany()->getId(),
-                'companyName' => $e[0]->getCompany()->getCompanyName(),
-                'placeName' => !empty($e[0]->getCompany()->getPlaceName()) ? $e[0]->getCompany()->getPlaceName() : '-',
+                'companyId' => $e['company']->getId(),
+                'companyName' => $e['company']->getCompanyName(),
+                'placeName' => !empty($e['company']->getPlaceName()) ? $e['company']->getPlaceName() : '-',
                 'amount' => $e['amountSum'],
             ];
         }
