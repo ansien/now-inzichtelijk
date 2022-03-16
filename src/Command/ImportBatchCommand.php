@@ -21,11 +21,13 @@ use Symfony\Component\HttpKernel\KernelInterface;
 final class ImportBatchCommand extends Command
 {
     public const DELIMITER = ';';
+
     public const FLUSH_LIMIT = 5000;
 
     private array $companyCache = [];
 
     private EntityManagerInterface $entityManager;
+
     private KernelInterface $kernel;
 
     public function __construct(EntityManagerInterface $entityManager, KernelInterface $kernel, string $name = null)
@@ -53,7 +55,7 @@ final class ImportBatchCommand extends Command
         $file = fopen($this->kernel->getProjectDir() . '/public/file/' . $filename, 'r');
 
         if (!$file) {
-            $io->error('Failed to load batch file.');
+            $io->error("Failed to load batch file $filename.");
 
             return Command::FAILURE;
         }
@@ -62,7 +64,7 @@ final class ImportBatchCommand extends Command
         while (($line = fgets($file)) !== false) {
             ++$i;
 
-            $content = explode(';', $line);
+            $content = explode(self::DELIMITER, $line);
 
             if (count($content) !== 3 || $i <= 1) {
                 continue;
@@ -77,7 +79,7 @@ final class ImportBatchCommand extends Command
 
             $this->createEntry($batchNumber, $company, $amountInt);
 
-            if ($i > 0 && $i % self::FLUSH_LIMIT === 0) {
+            if ($i % self::FLUSH_LIMIT === 0) {
                 $io->writeln("Flushing @ $i...");
                 $this->flush();
             }
@@ -87,7 +89,7 @@ final class ImportBatchCommand extends Command
 
         $this->flush();
 
-        $io->success('Successfully imported batch!');
+        $io->success("Successfully imported batch file $filename!");
 
         return Command::SUCCESS;
     }

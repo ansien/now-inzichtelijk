@@ -2,7 +2,7 @@
 > Code achter de website: https://now-inzichtelijk.nl.
 
 ## Ontwikkelomgeving vereisten
-- PHP 8.0 (incl. Composer)
+- PHP 8.1 (incl. Composer)
 - MySQL
 - Node.js
 - Yarn / npm
@@ -18,7 +18,7 @@
 ## Handige commands
 ```sh
 # Drop de database en herimporteer de CSV bestanden
-php bin/console doctrine:schema:drop --full-database --force && php bin/console app:import-batch 1 && php bin/console app:import-batch 2 && php bin/console app:import-batch 3 && php bin/console app:import-batch 4 && php bin/console app:import-batch 5
+php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-batch 1 && php bin/console app:import-batch 2 && php bin/console app:import-batch 3 && php bin/console app:import-batch 4 && php bin/console app:import-batch 5 && php bin/console app:import-batch 6
 
 # Deployer
 ./vendor/bin/dep deploy prod
