@@ -18,7 +18,7 @@
             <tr>
                 <th scope="row">{{ 'NOW ' ~ entry.batch }}</th>
                 <td>{{ entry.depositedAmount|format_currency('EUR', { fraction_digit: 0 }) }}</td>
-                <td class="{{ entry.updatedAmount is null ? '' : (entry.updatedAmount >= entry.depositedAmount) ? 'text-success' : 'text-danger' }}">{{ entry.updatedAmount ? entry.updatedAmount|format_currency('EUR', { fraction_digit: 0 }) : 'Nog niet bekend' }}</td>
+                <td class="{{ entry.updatedAmount is null ? '' : (entry.updatedAmount >= entry.depositedAmount) ? 'text-success' : 'text-danger' }}">{{ entry.updatedAmount is not null ? entry.updatedAmount|format_currency('EUR', { fraction_digit: 0 }) : 'Nog niet bekend' }}</td>
             </tr>
         {% endfor %}
         </tbody>
