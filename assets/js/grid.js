@@ -86,7 +86,7 @@ export const grid = new Grid({
             'showing': ' ',
             'of': 'van de',
             'to': 'tot',
-            'results': 'toekenningen'
+            'results': 'bedrijven'
         },
         loading: 'Laden...',
         noRecordsFound: 'Geen toekenningen gevonden',

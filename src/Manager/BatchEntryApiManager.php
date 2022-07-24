@@ -151,16 +151,15 @@ final class BatchEntryApiManager
             ];
         }
 
-        $totalAmount = 0;
-
+        $totalDepositedAmount = 0;
         try {
-            $totalAmount = (int) $totalAmountQb->getQuery()->getSingleScalarResult();
+            $totalDepositedAmount = (int) $totalAmountQb->getQuery()->getScalarResult()[0]['depositedAmountSum'];
         } catch (NoResultException|NonUniqueResultException) {
         }
 
         return [
             'result' => $result,
-            'totalAmount' => $totalAmount,
+            'totalAmount' => $totalDepositedAmount,
             'totalResults' => $paginator->count(),
             'page' => $page,
         ];
