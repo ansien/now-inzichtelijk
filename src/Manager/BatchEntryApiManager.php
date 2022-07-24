@@ -24,7 +24,8 @@ final class BatchEntryApiManager
     private const ALLOWED_ORDER_KEYS = [
         'companyName' => 'c.companyName',
         'placeName' => 'c.placeName',
-        'amount' => 'amountSum',
+        'depositedAmount' => 'depositedAmountSum',
+        'updatedAmount' => 'updatedAmountSum',
     ];
 
     private CacheManager $cacheManager;
@@ -91,14 +92,14 @@ final class BatchEntryApiManager
     private function getBatchEntriesFromDatabase(int $page, ?string $orderString, ?string $searchString): array
     {
         $qb = $this->companyRepository->createQueryBuilder('c')
-            ->select('c as company, SUM(e.amount) as amountSum')
+            ->select('c as company, SUM(e.depositedAmount) as depositedAmountSum, SUM(e.updatedAmount) as updatedAmountSum')
             ->join('c.entries', 'e')
             ->groupBy('e.company')
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
         $totalAmountQb = $this->entryRepository->createQueryBuilder('e')
-            ->select('SUM(e.amount) as amountSum')
+            ->select('SUM(e.depositedAmount) as depositedAmountSum, SUM(e.updatedAmount) as updatedAmountSum')
             ->join('e.company', 'c');
 
         if ($searchString) {
@@ -145,7 +146,8 @@ final class BatchEntryApiManager
                 'companyId' => $e['company']->getId(),
                 'companyName' => $e['company']->getCompanyName(),
                 'placeName' => !empty($e['company']->getPlaceName()) ? $e['company']->getPlaceName() : '-',
-                'amount' => $e['amountSum'],
+                'depositedAmount' => $e['depositedAmountSum'],
+                'updatedAmount' => $e['updatedAmountSum'],
             ];
         }
 
@@ -184,7 +186,8 @@ final class BatchEntryApiManager
         foreach ($company->getEntries() as $entry) {
             $result[] = [
                 'batch' => $entry->getBatch(),
-                'amount' => $entry->getAmount(),
+                'depositedAmount' => $entry->getDepositedAmount(),
+                'updatedAmount' => $entry->getUpdatedAmount(),
             ];
         }
 

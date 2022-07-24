@@ -10,7 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=EntryRepository::class)
  * @ORM\Table(indexes={
- *     @ORM\Index(name="amount_idx", columns={"amount"}),
+ *     @ORM\Index(name="deposited_amount_idx", columns={"deposited_amount"}),
+ *     @ORM\Index(name="updated_amount_idx", columns={"updated_amount"}),
  * })
  */
 class Entry
@@ -35,17 +36,27 @@ class Entry
     private int $batch;
 
     /**
-     * @ORM\Column(type="integer")
+     * VERSTREKT VOORSCHOT.
+     *
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private int $amount;
+    private int $depositedAmount;
+
+    /**
+     * VASTGESTELDE SUBSIDIE.
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private ?int $updatedAmount;
 
     // endregion
 
-    public function __construct(int $batch, Company $company, int $amount)
+    public function __construct(int $batch, Company $company, int $depositedAmount, ?int $updatedAmount)
     {
         $this->batch = $batch;
         $this->company = $company;
-        $this->amount = $amount;
+        $this->depositedAmount = $depositedAmount;
+        $this->updatedAmount = $updatedAmount;
     }
 
     // region Getters
@@ -65,9 +76,14 @@ class Entry
         return $this->batch;
     }
 
-    public function getAmount(): int
+    public function getDepositedAmount(): int
     {
-        return $this->amount;
+        return $this->depositedAmount;
+    }
+
+    public function getUpdatedAmount(): ?int
+    {
+        return $this->updatedAmount;
     }
 
     // endregion

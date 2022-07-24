@@ -14,7 +14,8 @@ const handleApiData = (data) => {
         e['companyId'],
         e['companyName'],
         e['placeName'],
-        e['amount'],
+        e['depositedAmount'],
+        e['updatedAmount'],
     ]);
 }
 
@@ -31,9 +32,15 @@ export const grid = new Grid({
             name: 'VESTIGINGSPLAATS',
         },
         {
-            name: 'TOTAALBEDRAG',
-            formatter: (amount, r, d) => {
-                return html(`<a href='javascript:void(0)' class='nowi-modal-toggle' data-company-id='${r._cells[0].data}'>${moneyFormatter.format(amount)}</a>`);
+            name: 'VOORSCHOT ONTVANGEN',
+            formatter: (depositedAmount, r, d) => {
+                return html(`<a href='javascript:void(0)' class='nowi-modal-toggle' data-company-id='${r._cells[0].data}'>${moneyFormatter.format(depositedAmount)}</a>`);
+            }
+        },
+        {
+            name: 'VASTGESTELD BEDRAG',
+            formatter: (updatedAmount, r, d) => {
+                return html(`<a href='javascript:void(0)' class='nowi-modal-toggle' data-company-id='${r._cells[0].data}'>${moneyFormatter.format(updatedAmount)}</a>`);
             }
         },
     ],
@@ -50,12 +57,12 @@ export const grid = new Grid({
                 let orderStrings = [];
 
                 if (!columns.length) {
-                    orderStrings.push('amount:desc');
+                    orderStrings.push('depositedAmount:desc');
                 }
 
                 for (let col of columns) {
                     const dir = col.direction === 1 ? 'asc' : 'desc';
-                    let colName = ['companyName', 'placeName', 'amount'][col.index - 1];
+                    let colName = ['companyName', 'placeName', 'depositedAmount', 'updatedAmount'][col.index - 1];
 
                     orderStrings.push(`${colName}:${dir}`);
                 }

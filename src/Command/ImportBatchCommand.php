@@ -20,9 +20,11 @@ use Symfony\Component\HttpKernel\KernelInterface;
 )]
 final class ImportBatchCommand extends Command
 {
-    public const DELIMITER = ';';
+    private const FINALIZED_BATCHES = [1];
 
-    public const FLUSH_LIMIT = 5000;
+    private const DELIMITER = ';';
+
+    private const FLUSH_LIMIT = 5000;
 
     private array $companyCache = [];
 
@@ -50,7 +52,17 @@ final class ImportBatchCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $batchNumber = (int) $input->getArgument('batchNumber');
-        $filename = "batch-$batchNumber.csv";
+
+        $isFinal = false;
+        if (in_array($batchNumber, self::FINALIZED_BATCHES, true)) {
+            $isFinal = true;
+        }
+
+        if ($isFinal === true) {
+            $filename = "batch-$batchNumber-final.csv";
+        } else {
+            $filename = "batch-$batchNumber.csv";
+        }
 
         $file = fopen($this->kernel->getProjectDir() . '/public/file/' . $filename, 'r');
 
@@ -66,7 +78,15 @@ final class ImportBatchCommand extends Command
 
             $content = explode(self::DELIMITER, $line);
 
-            if (count($content) !== 3 || $i <= 1) {
+            if ($i <= 1) {
+                continue;
+            }
+
+            if ($isFinal === false && (count($content) !== 3)) {
+                continue;
+            }
+
+            if ($isFinal === true && (count($content) !== 4)) {
                 continue;
             }
 
@@ -74,10 +94,16 @@ final class ImportBatchCommand extends Command
             $placeName = $this->cleanInput($content[1]);
             $company = $this->findOrCreateCompany($companyName, $placeName);
 
-            $amount = $this->cleanInput($content[2]);
-            $amountInt = (int) str_replace(['.', ','], '', $amount);
+            $depositedAmount = $this->cleanInput($content[2]);
+            $depositedAmountInt = (int) str_replace(['.', ','], '', $depositedAmount);
 
-            $this->createEntry($batchNumber, $company, $amountInt);
+            $updatedAmountInt = null;
+            if ($isFinal === true) {
+                $updatedAmount = $this->cleanInput($content[3]);
+                $updatedAmountInt = (int) str_replace(['.', ','], '', $updatedAmount);
+            }
+
+            $this->createEntry($batchNumber, $company, $depositedAmountInt, $updatedAmountInt);
 
             if ($i % self::FLUSH_LIMIT === 0) {
                 $io->writeln("Flushing @ $i...");
@@ -122,7 +148,7 @@ final class ImportBatchCommand extends Command
             return $existingPlace;
         }
 
-        // Otherwise create a new company and cache
+        // Otherwise, create a new company and cache
         $newCompany = new Company($companyName, $placeName);
         $this->entityManager->persist($newCompany);
         $this->companyCache[$cacheKey] = $newCompany;
@@ -130,9 +156,9 @@ final class ImportBatchCommand extends Command
         return $newCompany;
     }
 
-    private function createEntry(int $batchNumber, Company $company, int $amount): void
+    private function createEntry(int $batchNumber, Company $company, int $depositedAmount, ?int $updatedAmount = null): void
     {
-        $entry = new Entry($batchNumber, $company, $amount);
+        $entry = new Entry($batchNumber, $company, $depositedAmount, $updatedAmount);
         $this->entityManager->persist($entry);
     }
 

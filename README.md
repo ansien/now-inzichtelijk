@@ -18,7 +18,7 @@
 ## Handige commands
 ```sh
 # Drop de database en herimporteer de CSV bestanden
-php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-batch 1 && php bin/console app:import-batch 2 && php bin/console app:import-batch 3 && php bin/console app:import-batch 4 && php bin/console app:import-batch 5 && php bin/console app:import-batch 6
+php bin/console doctrine:schema:drop --full-database --force && php bin/console doctrine:schema:update --force && php bin/console app:import-batch 1 && php bin/console app:import-batch 2 && php bin/console app:import-batch 3 && php bin/console app:import-batch 4 && php bin/console app:import-batch 5 && php bin/console app:import-batch 6 && php bin/console app:import-batch 7
 
 # Deployer
 ./vendor/bin/dep deploy prod
