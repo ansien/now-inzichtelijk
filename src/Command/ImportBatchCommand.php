@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 )]
 final class ImportBatchCommand extends Command
 {
-    private const FINALIZED_BATCHES = [1];
+    private const FINALIZED_BATCHES = [1, 2];
 
     private const DELIMITER = ';';
 
