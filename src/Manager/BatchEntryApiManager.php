@@ -94,7 +94,7 @@ final class BatchEntryApiManager
         $qb = $this->companyRepository->createQueryBuilder('c')
             ->select('c as company, SUM(e.depositedAmount) as depositedAmountSum, SUM(e.updatedAmount) as updatedAmountSum')
             ->join('c.entries', 'e')
-            ->groupBy('e.company')
+            ->groupBy('c.id')
             ->setFirstResult(self::PAGE_SIZE * ($page - 1))
             ->setMaxResults(self::PAGE_SIZE);
 
