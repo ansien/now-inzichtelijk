@@ -7,7 +7,7 @@ deployer:
   directory: now-inzichtelijk.nl
 
 php:
-  version: 8.0
+  version: 8.2
 
 certbot:
   email: "{{ vault.certbot.email }}"
