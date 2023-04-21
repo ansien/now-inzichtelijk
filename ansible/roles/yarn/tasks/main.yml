@@ -3,8 +3,6 @@
 - name: Configure key
   shell:
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
-  args:
-    warn: no
 
 - name: Configure source
   shell: |

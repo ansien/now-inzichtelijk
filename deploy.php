@@ -59,6 +59,5 @@ task('deploy', [
     'deploy:assets:build',
     'database:migrate',
     'deploy:cache:clear',
-    'deploy:cache:warmup',
     'deploy:publish',
 ]);
